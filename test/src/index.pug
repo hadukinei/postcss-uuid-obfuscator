@@ -1,0 +1,45 @@
+doctype html
+html.is--light(lang="en")
+  head
+    title TestIndex - PostCSS-UUID-Obfuscator
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    link(rel="icon", href="favicon.ico")
+    link(rel="stylesheet", href="css/index.css")
+    script(src="js/index.js")
+    link(rel="preconnect", href="https://fonts.googleapis.com")
+    link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
+    link(rel="stylesheet", href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@300;500&display=swap")
+    link(rel="stylesheet", href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap&text=Iabdenotux")
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css")
+  body.c-body.min-h-screen
+    div.c-background
+      picture.c-background--inner
+        source(srcset="img/background-index.webp", type="image/webp")
+        img.c-background--image(src="img/background-index.jpg", alt="background image")
+    div.c-header
+      div.c-header--inner
+        ul.c-header--link
+          li
+            a.c-header--link--anchor(href="./") index
+          li
+            a.c-header--link--anchor(href="./about.html") about
+        ul.c-header--color_theme
+          li
+            button.c-header--color_theme--button.c-header--color_theme--button_light(aria-label="light")
+              i.ri-sun-line
+          li
+            button.c-header--color_theme--button.c-header--color_theme--button_dark(aria-label="dark")
+              i.ri-moon-clear-fill
+    div.c-main(data-scrollbar)
+      div.c-main--inner
+        h1.c-main--header
+          source(srcset="img/caption.webp", type="image/webp")
+          img.c-main--header--image(src="img/caption.png", alt="")
+          figcaption.c-main--header--caption Index
+        div.c-main--contents
+          p.c-main--contents--paragraph Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer venenatis pretium ex, congue scelerisque turpis sagittis vitae. Fusce ultrices ornare mauris, ac convallis ante fringilla sed. Suspendisse eu diam at lacus ultricies dictum sit amet non arcu. Aliquam vitae ornare orci. Nullam convallis diam id tortor tempor molestie. Duis facilisis egestas sapien, in elementum lacus tincidunt eu. Suspendisse finibus mauris ac semper blandit. Phasellus sed dolor imperdiet, malesuada tellus semper, ornare orci. Mauris luctus purus lectus, in suscipit enim ultrices vel. Integer libero lacus, feugiat non mi eu, sagittis tempor lacus.
+          p.c-main--contents--paragraph Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Fusce pulvinar diam in rhoncus finibus. Quisque dapibus maximus orci, at molestie nibh ultrices eu. Nunc vitae pharetra arcu, eget tincidunt nunc. Donec maximus mi sed urna semper porttitor id lobortis massa. Duis vel blandit sapien. Sed mattis metus sit amet diam dictum feugiat.
+          p.c-main--contents--paragraph Quisque vitae lectus lobortis, dignissim nunc in, fringilla velit. Aliquam neque nisi, pretium at suscipit finibus, finibus eu enim. Quisque mollis nisi id felis porttitor, nec rutrum justo pharetra. Sed volutpat rhoncus eros, id feugiat felis bibendum at. Donec auctor et sapien eget lobortis. Phasellus ac purus interdum, tincidunt sem id, viverra elit. Aliquam at augue quis tellus ornare vehicula. Vivamus ut sodales purus. Praesent dictum nec massa vel dignissim.
+          p.c-main--contents--paragraph In posuere nunc nisi, quis volutpat nulla feugiat viverra. Pellentesque ut ipsum at ex pretium finibus non et mi. Mauris pellentesque nunc non pharetra sodales. Sed ac dignissim lacus. Nulla facilisi. Aenean sit amet imperdiet diam. Donec et sem malesuada, sollicitudin lorem eu, convallis massa. Nunc vitae ornare justo, sed ullamcorper nulla. Ut euismod sagittis diam, vel pulvinar ligula sagittis in. Praesent sit amet magna eget orci vehicula commodo et at libero. Morbi posuere sollicitudin risus ac mattis. Mauris commodo sapien et velit semper, sodales dignissim magna sollicitudin. Vestibulum sagittis tincidunt venenatis. Nulla tincidunt justo at magna iaculis, id finibus velit interdum. Ut turpis quam, dignissim nec enim convallis, vulputate sagittis massa. Praesent dapibus lacus id placerat elementum.
+          p.c-main--contents--paragraph Fusce quis nibh iaculis, varius mi sed, laoreet urna. Duis vitae orci quis ligula elementum commodo. Phasellus vitae molestie risus. Ut vel turpis tortor. Donec condimentum a nulla non aliquet. Aenean dui nisl, aliquet ac nunc sit amet, sagittis sollicitudin quam. Pellentesque scelerisque eros eu lobortis pellentesque. Maecenas ex sem, volutpat eget magna a, pretium gravida risus. Vivamus viverra tristique mauris, et tincidunt sem molestie sit amet. Curabitur ullamcorper sagittis dolor, sit amet euismod eros lacinia et. Nunc accumsan et arcu eget interdum. Aenean sit amet luctus arcu.
+        h2.c-main--footer &copy;2024 hadukinei.
