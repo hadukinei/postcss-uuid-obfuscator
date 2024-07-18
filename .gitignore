@@ -1,0 +1,10 @@
+node_modules/
+
+/test/src/_adobe/
+
+/test/**/*
+!/test/src/
+!/test/gulpfile.mjs
+!/test/package-lock.json
+!/test/package.json
+!/test/tailwind.config.js
