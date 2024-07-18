@@ -9,6 +9,9 @@ import filter from 'gulp-filter'
 
 import { glob } from 'glob'
 
+import fs from 'fs-extra'
+
+
 // Image
 import sharpOptimizeImages from 'gulp-sharp-optimize-images'
 
@@ -41,6 +44,9 @@ import browserSync from 'browser-sync'
 
 // npm run build, or npm run dev
 const isDev = /(^|[\s'"`])dev([\s'"`]|$)/.test(process.title)
+
+// PostCSS UUID Obfuscator: JSON.map file path
+const jsonsPath = 'css-obfuscator'
 
 
 /**
@@ -149,6 +155,7 @@ const task_css = done => {
       enable: !isDev,
       length: 3,
       targetPath: 'dist',
+      jsonsPath: jsonsPath,
       fresh: true,
       applyClassNameWithoutDot: true,
       classIgnore: ['scrollbar-track', 'scrollbar-thumb'],
@@ -161,6 +168,18 @@ const task_css = done => {
 
 const task_applyObfuscate = done => {
   gulpApplyObfuscated()
+
+  done()
+}
+
+const task_clean = done => {
+  if(fs.existsSync('dist')){
+    fs.rmSync('dist', {recursive: true})
+  }
+
+  if(fs.existsSync(jsonsPath)){
+    fs.rmSync(jsonsPath, {recursive: true})
+  }
 
   done()
 }
@@ -219,8 +238,5 @@ export const dev = series(
 
 // npm run clean
 export const clean = series(
-  done => {
-    console.log('clean')
-    done()
-  }
+  task_clean,
 )
