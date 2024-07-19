@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../src/js/index.ts"],
-  "sourcesContent": ["(d => {\r\n  d.addEventListener('DOMContentLoaded', () => {\r\n    console.log('fired')\r\n\r\n    d.querySelector('.c-color_red')?.addEventListener('click', e => {\r\n      e.stopPropagation()\r\n      e.preventDefault()\r\n      console.log('red', 'c-color_red')\r\n      return false\r\n    })\r\n    d.querySelector('.c-color_blue')?.addEventListener('click', e => {\r\n      e.stopPropagation()\r\n      e.preventDefault()\r\n      console.log('blue', 'c-color_blue')\r\n      return false\r\n    })\r\n  })\r\n})(document)"],
-  "mappings": "OAACA,GAAK,CACJA,EAAE,iBAAiB,mBAAoB,IAAM,CAD/C,IAAAC,EAAAC,EAEI,QAAQ,IAAI,OAAO,GAEnBD,EAAAD,EAAE,cAAc,cAAc,IAA9B,MAAAC,EAAiC,iBAAiB,QAAS,IACzD,EAAE,gBAAgB,EAClB,EAAE,eAAe,EACjB,QAAQ,IAAI,MAAO,aAAa,EACzB,MAETC,EAAAF,EAAE,cAAc,eAAe,IAA/B,MAAAE,EAAkC,iBAAiB,QAAS,IAC1D,EAAE,gBAAgB,EAClB,EAAE,eAAe,EACjB,QAAQ,IAAI,OAAQ,cAAc,EAC3B,IAEX,CAAC,CACH,GAAG,QAAQ",
-  "names": ["d", "_a", "_b"]
-}

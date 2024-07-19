@@ -1,2 +1,0 @@
-(()=>{(o=>{o.addEventListener("DOMContentLoaded",()=>{var r,l;console.log("fired"),(r=o.querySelector(".c-color_red"))==null||r.addEventListener("click",e=>(e.stopPropagation(),e.preventDefault(),console.log("red","c-color_red"),!1)),(l=o.querySelector(".c-color_blue"))==null||l.addEventListener("click",e=>(e.stopPropagation(),e.preventDefault(),console.log("blue","c-color_blue"),!1))})})(document);})();
-//# sourceMappingURL=index.js.map

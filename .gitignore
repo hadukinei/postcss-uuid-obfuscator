@@ -1,5 +1,6 @@
 node_modules/
 
 /test/css-obfuscator/
-/test/dist/
+/test/gulp/dist/
+/test/postcss/dist/
 /test/src/_adobe/

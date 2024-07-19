@@ -82,7 +82,7 @@ const task = async () => {
          * gulpではsrcで捕まえたファイル群をストリームで処理していたので、その初期化処理としてfleshはキャッシュ削除として有効だった
          * postcss単独で行う場合はファイルごとに処理するため、freshをtrueにすると都度初期化してしまうので前回以前の内容を削除してしまうためNG
          */
-        //fresh: true,
+        fresh: false,
         applyClassNameWithoutDot: true,
         classIgnore: ['scrollbar-track', 'scrollbar-thumb'],
       })

@@ -156,6 +156,10 @@ const task_css = done => {
       length: 3,
       targetPath: 'dist',
       jsonsPath: jsonsPath,
+      /**
+       * postcss単独で行う場合はファイルごとに処理をするため、freshをfalseにしておかないと前回の内容を削除してしまうためNGだった
+       * gulpでは逆にsrcで捕まえたファイル群をストリームで処理するため、逆にfreshをtrueにしておかないと正常にCSSが書き出されない
+       */
       fresh: true,
       applyClassNameWithoutDot: true,
       classIgnore: ['scrollbar-track', 'scrollbar-thumb'],
