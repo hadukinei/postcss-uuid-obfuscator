@@ -2,7 +2,7 @@ import Scrollbar from 'smooth-scrollbar'
 
 (d => {
   d.addEventListener('DOMContentLoaded', () => {
-    console.log('index page')
+    console.log('about page')
 
     /**
      * smooth scrollbar

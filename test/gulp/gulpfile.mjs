@@ -29,7 +29,7 @@ import autoprefixer from 'autoprefixer'
 import tailwindcss from 'tailwindcss'
 import csso from 'postcss-csso'
 
-import { obfuscator, applyObfuscated } from '../../index.mjs'
+import { cleanObfuscator, obfuscator, applyObfuscated } from '../../index.mjs'
 
 // TypeScript
 import * as esbuild from 'esbuild'
@@ -142,6 +142,8 @@ const task_js = async done => {
 
 // CSS <= SCSS
 const task_css = done => {
+  cleanObfuscator(jsonsPath)
+
   src('src/**/!(_)*.scss', {
     allowEmpty: true,
   })
@@ -151,16 +153,14 @@ const task_css = done => {
     tailwindcss(),
     autoprefixer(),
     csso(),
+    /**
+     * postcss単独とは異なり、複数のエントリポイントを作成してもよい
+     */
     obfuscator({
       enable: !isDev,
       length: 3,
       targetPath: 'dist',
       jsonsPath: jsonsPath,
-      /**
-       * postcss単独で行う場合はファイルごとに処理をするため、freshをfalseにしておかないと前回の内容を削除してしまうためNGだった
-       * gulpでは逆にsrcで捕まえたファイル群をストリームで処理するため、逆にfreshをtrueにしておかないと正常にCSSが書き出されない
-       */
-      fresh: true,
       applyClassNameWithoutDot: true,
       classIgnore: ['scrollbar-track', 'scrollbar-thumb'],
     })

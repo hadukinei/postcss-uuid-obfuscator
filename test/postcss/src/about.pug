@@ -1,14 +1,48 @@
 doctype html
-html
+html.is--light(lang="en")
   head
-    link(rel="stylesheet", href="css/about.css")
-    script(src="js/index.js")
-    //base(href=`${locals.base}`)
-  body
-    h1 about
-    div.c-color_blue color blue
-    ul
-      li
-        a(href="./") index
-      li
-        a(href="./about.html") about
+    title TestAbout - PostCSS-UUID-Obfuscator
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    link(rel="icon", href="favicon.ico", sizes="any", type="image/vnd.microsoft.icon")
+    link(rel="icon", href="favicon.png", sizes="any", type="image/png")
+    link(rel="apple-touch-icon", href="apple-touch-icon.png")
+    link(rel="manifest", href="manifest.webmanifest")
+    link(rel="stylesheet", href="css/index.css")
+    script(src="js/about.js")
+    link(rel="preconnect", href="https://fonts.googleapis.com")
+    link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
+    link(rel="stylesheet", href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@300;500&display=swap")
+    link(rel="stylesheet", href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap&text=Iabdenotux")
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css")
+  body.c-body.min-h-screen
+    div.c-background
+      picture.c-background--inner
+        source(srcset="img/background-about.webp", type="image/webp")
+        img.c-background--image(src="img/background-about.jpg", alt="background image")
+    div.c-header
+      div.c-header--inner
+        ul.c-header--link
+          li
+            a.c-header--link--anchor(href="./") index
+          li
+            a.c-header--link--anchor(href="./about.html") about
+        ul.c-header--color_theme
+          li
+            button.c-header--color_theme--button.c-header--color_theme--button_light(aria-label="light")
+              i.ri-sun-line
+          li
+            button.c-header--color_theme--button.c-header--color_theme--button_dark(aria-label="dark")
+              i.ri-moon-clear-fill
+    div.c-main(data-scrollbar)
+      div.c-main--inner
+        h1.c-main--header
+          source(srcset="img/caption.webp", type="image/webp")
+          img.c-main--header--image(src="img/caption.png", alt="")
+          figcaption.c-main--header--caption about
+        div.c-main--contents
+          p.c-main--contents--paragraph Suspendisse ac ex arcu. Suspendisse potenti. Integer et hendrerit turpis, vitae molestie justo. Etiam feugiat risus odio, ut cursus augue pulvinar in. Maecenas sit amet enim vitae justo fringilla posuere nec et nulla. Morbi id convallis nisi. Vestibulum eget augue sit amet tellus consequat efficitur ac a ante. Proin nec erat sit amet eros blandit sodales id pharetra metus. Nulla facilisi. Sed sit amet convallis orci, vitae bibendum diam. Nunc aliquet posuere blandit. Aenean bibendum erat justo, sit amet molestie neque iaculis eget. Duis mattis turpis justo, non semper augue egestas in. Curabitur quis eleifend est. Curabitur blandit, sem nec fermentum tempor, nisl sapien pulvinar ante, ac volutpat risus nisi dapibus lorem.
+          p.c-main--contents--paragraph Etiam venenatis rutrum bibendum. Aliquam erat volutpat. Duis id augue tempus, tristique nisi sit amet, pulvinar dolor. Proin aliquet velit et elit vehicula posuere. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse potenti. Aenean cursus neque vitae mattis scelerisque. Donec id sodales nisl, non hendrerit turpis. Maecenas pellentesque volutpat augue quis rhoncus. Curabitur lacinia enim eget purus dictum, eu congue mi euismod. Praesent ac iaculis arcu, vitae luctus sem.
+          p.c-main--contents--paragraph Ut rutrum, nisl cursus maximus ultricies, dui purus vehicula arcu, feugiat consectetur nisi quam nec neque. Vivamus at lacus ornare, posuere nulla sit amet, pharetra nisi. Nullam iaculis viverra tellus, consequat consequat orci dapibus eget. Morbi quis pellentesque orci. Curabitur ullamcorper massa sed lectus tristique, ut malesuada justo maximus. Sed ac quam nec tellus tincidunt commodo. Nunc pellentesque porttitor sem, eu euismod quam gravida sit amet. Nullam consequat sapien neque, rhoncus molestie nunc imperdiet eget. Nulla id turpis quis velit ornare pretium. Maecenas quis ante quam. Quisque quis vehicula ante, vel sollicitudin elit. Mauris tincidunt diam metus, a tincidunt sapien accumsan sed. Nam auctor venenatis ligula, in iaculis arcu sodales quis.
+          p.c-main--contents--paragraph Morbi posuere blandit arcu. Quisque ullamcorper augue quis orci accumsan consectetur. Aliquam et ipsum nulla. Phasellus auctor sapien aliquam odio ultrices faucibus. Nulla vitae dolor eu neque fringilla lacinia. Morbi a dolor mauris. Suspendisse commodo ante et turpis congue rhoncus. Fusce et arcu maximus, feugiat mauris eleifend, malesuada felis. Praesent nunc nisl, blandit ac arcu ac, dapibus gravida lacus. Pellentesque dolor sapien, consectetur eget pretium sit amet, egestas at dolor.
+          p.c-main--contents--paragraph Ut ac ornare libero. Sed dapibus non erat posuere molestie. Nulla vitae magna felis. Vestibulum in arcu a erat faucibus mattis ac at nisl. Proin eleifend purus vitae risus dapibus, eu congue quam tempor. Ut dui dui, semper a felis ac, commodo consectetur enim. Aenean mauris elit, facilisis sed nulla sed, pellentesque tempus risus. Donec in sapien velit. Fusce malesuada est vel nibh ornare, ac gravida magna lobortis. Vivamus ac lectus sit amet nulla laoreet vehicula vel id elit.
+        h2.c-main--footer &copy;2024 hadukinei.

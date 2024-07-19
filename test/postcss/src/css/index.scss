@@ -1,19 +1,176 @@
-@forward "./_fwd.scss";
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body{
-  @apply bg-[#fffeff];
+/**
+ * setting
+ */
+:root{
+  --font_family-monospace: "Noto Sans Mono", monospace;
+  --font_family-cursive: "Rock Salt", cursive;
 
-  h1{
-    font-size: 100%;
+  --weight-normal: 300;
+  --weight-bold: 500;
+}
+
+.is--light ,html{
+  color-scheme: light;
+  --main-text: #e5edf5;
+  --main-background: #1c314a;
+  --background-filter: blur(2px) saturate(0.2) opacity(1);
+  --header-filter: blur(2px) brightness(1.5) grayscale(0.25) opacity(0.9);
+  --header-background: #fff8;
+  --theme-default: #1c314a;
+  --theme-hover: #5786c0;
+  --title-filter: brightness(1);
+  --scrollbar-track: #cee5be;
+  --scrollbar-thumb: #273c17;
+  --selection: #1e2e1180;
+}
+
+.is--dark{
+  color-scheme: dark;
+  --main-text: #1c314a;
+  --main-background: #e5edf5;
+  --background-filter: blur(0px) saturate(0.1) opacity(0.2);
+  --header-filter: blur(2px) brightness(1.5) grayscale(0.25) opacity(0.9);
+  --header-background: #000b;
+  --theme-default: #5786c0;
+  --theme-hover: #1c314a;
+  --title-filter: brightness(0.25);
+  --scrollbar-track: #cee5be;
+  --scrollbar-thumb: #4d752c;
+  --selection: #1e2e1140;
+}
+
+
+/**
+ * Smooth Scrollbar
+ */
+.scrollbar-track{
+  background-color: var(--scrollbar-track) !important;
+}
+
+.scrollbar-thumb{
+  background-color: var(--scrollbar-thumb) !important;
+}
+
+
+/**
+ * body
+ */
+.c-body{
+  font-family: var(--font_family-monospace);
+  font-weight: var(--weight-normal);
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+  color: var(--main-text);
+  background-color: var(--main-background);
+}
+
+::selection{
+  background-color: var(--selection);
+}
+
+
+/**
+ * background
+ */
+.c-background{
+  @apply absolute w-full h-full transition-[filter] duration-300;
+  filter: var(--background-filter);
+
+  &--inner{
+    @apply block w-full h-full;
+  }
+
+  &--image{
+    @apply block w-full h-full object-cover;
   }
 }
 
-.c-color{
-  &_red{
-    @apply text-red-700;
+
+/**
+ * Header
+ */
+.c-header{
+  @apply relative z-50 h-8 w-full;
+  backdrop-filter: var(--header-filter);
+  background-color: var(--header-background);
+
+  &--inner{
+    @apply flex flex-wrap justify-between items-center w-full h-full max-w-screen-xl mx-auto;
+  }
+
+  &--link{
+    @apply flex gap-x-2;
+
+    &--anchor{
+      @apply transition-colors duration-300;
+      color: var(--theme-default);
+      font-weight: var(--weight-bold);
+
+      &:hover{
+        color: var(--theme-hover);
+      }
+    }
+  }
+
+  &--color_theme{
+    @apply flex gap-x-2;
+
+    &--button{
+      @apply text-xl leading-normal transition-colors duration-300;
+      color: var(--theme-default);
+
+      &:hover{
+        color: var(--theme-hover);
+      }
+
+      &_light, &_dark{
+        @apply block;
+      }
+    }
+  }
+}
+
+
+/**
+ * Content main
+ */
+.c-main{
+  @apply left-0 top-0 z-0 w-full h-full pt-8;
+  position: absolute !important;
+
+  &--inner{
+    @apply grid grid-rows-[min-content_1fr_min-content] w-full min-h-[calc(100dvh-2rem)];
+  }
+
+  &--header{
+    @apply w-full max-w-[320px] sm:max-w-[480px] md:max-w-[640px] mx-auto mt-[min(25vw,25vh)] mb-[min(12.5vw,12.5vh)];
+    filter: var(--title-filter);
+
+    &--image{
+      @apply block w-full;
+      max-width: unset !important;
+    }
+
+    &--caption{
+      @apply tracking-[1em] text-center;
+      font-family: var(--font_family-cursive);
+    }
+  }
+
+  &--contents{
+    @apply flex flex-col gap-y-4 w-full max-w-[640px] md:max-w-[800px] mx-auto px-4;
+
+    &--paragraph{
+      @apply indent-6;
+    }
+  }
+
+  &--footer{
+    @apply my-10 text-center;
   }
 }

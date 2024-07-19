@@ -46,7 +46,6 @@ const defaultOptions = {
     javascript: ['.js'],
   },
   outputExcludes: [], // ex. htmlExcludes, ['.js', '.htm']
-  fresh: false,
   multi: false,
   differMulti: false,
   formatJson: false,
@@ -67,6 +66,13 @@ const pluginName = 'PostCSS UUID Obfuscator'
  * PostCSS UUID Obfuscator
  * This product works on gulp-postcss with gulpfile.mjs
  */
+export const cleanObfuscator = jsonsPath => {
+  if(fs.existsSync(jsonsPath)){
+    fs.rmSync(jsonsPath, {recursive: true})
+    logger('info', pluginName, 'Data removed:', jsonsPath)
+  }
+}
+
 export const obfuscator = (options = {}) => {
   const {
     enable,
@@ -79,7 +85,6 @@ export const obfuscator = (options = {}) => {
     targetPath,
     extensions,
     outputExcludes,
-    fresh,
     multi,
     differMulti,
     formatJson,
@@ -100,6 +105,7 @@ export const obfuscator = (options = {}) => {
   optionsOverride.isComplete = false
 
   const lockFilePath = '.obfuscator.lock'
+  const fresh = true
 
   return {
     postcssPlugin: pluginName,

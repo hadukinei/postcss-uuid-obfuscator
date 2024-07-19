@@ -16,7 +16,7 @@ import autoprefixer from 'autoprefixer'
 import tailwindcss from 'tailwindcss'
 import csso from 'postcss-csso'
 
-import { obfuscator, applyObfuscated } from '../../index.mjs'
+import { cleanObfuscator, obfuscator, applyObfuscated } from '../../index.mjs'
 
 
 /**
@@ -50,9 +50,7 @@ const apply = () => {
 
 // PostCSS
 const task = async () => {
-  if(fs.existsSync(jsonsPath)){
-    fs.rmSync(jsonsPath, {recursive: true})
-  }
+  cleanObfuscator(jsonsPath)
 
   const files = await glob('src/css/**/!(_)*.scss', {
     ignore: 'node_modules/**',
@@ -73,16 +71,17 @@ const task = async () => {
       tailwindcss(),
       autoprefixer(),
       csso(),
+      /**
+       * ループでpostcssを回している関係から、複数のエントリポイント（*.scss）ファイルを作成した場合、最後に読み込んだものしか反映されずそれ以前のものは上書き消去されてしまう
+       * postcssの場合はエントリポイントファイルを１つにまとめることが必須
+       * 逆にgulpの場合はストリームで処理しているためエントリポイントは複数あっても問題ない
+       * そしてobfuscatorを使わない npm run dev の場合は当然postcssでもエントリポイントは複数あっても問題なし
+       */
       obfuscator({
         enable: !isDev,
         length: 3,
         targetPath: 'dist',
         jsonsPath: jsonsPath,
-        /**
-         * gulpではsrcで捕まえたファイル群をストリームで処理していたので、その初期化処理としてfleshはキャッシュ削除として有効だった
-         * postcss単独で行う場合はファイルごとに処理するため、freshをtrueにすると都度初期化してしまうので前回以前の内容を削除してしまうためNG
-         */
-        fresh: false,
         applyClassNameWithoutDot: true,
         classIgnore: ['scrollbar-track', 'scrollbar-thumb'],
       })

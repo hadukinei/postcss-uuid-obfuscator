@@ -3,6 +3,7 @@
 ## npm
 npm init -y
 npm i -D autoprefixer esbuild fs-extra glob npm-run-all2 path postcss postcss-csso pug sass sharp tailwindcss
+npm i smooth-scrollbar
 npx tailwindcss init
 
 ## package.json
