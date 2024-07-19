@@ -1,18 +1,37 @@
+/**
+ * load package
+ */
+
+// Files
 import path from 'path'
 import fs from 'fs-extra'
+
+// Syntax
 import { createParser } from 'css-selector-parser'
-import { v4 as uuid4 } from 'uuid'
-import { hashSync } from 'hasha'
 import { parse as htmlParser } from 'node-html-parser'
 import * as espree from 'espree'
 import estraverse from 'estraverse'
 import escodegen from 'escodegen'
+
 import { minify } from 'terser'
 
+// Hash for Crypt
+import { v4 as uuid4 } from 'uuid'
+import { hashSync } from 'hasha'
+
+
+/**
+ * global variable
+ */
+
+// Random seed
 let seed = uuid4()
+
+// Hashed class list
 let tmpClassList = []
 
-
+// defalut option: gulpObfuscator
+/** @see README.md */
 const defaultOptions = {
   enable: true,
   length: 5,
@@ -36,17 +55,17 @@ const defaultOptions = {
   preRun: () => Promise.resolve(), //new Promise(resolve => setTimeout(resolve, 500)), //Promise.resolve(),
   callBack: () => {},//() => {console.log('done')}
 }
-const pluginName = 'PostCSS UUID Obfuscator'
 
+// merged options, gulpApplyObfuscated inherited from gulpObfuscator
 let optionsOverride = {}
+
+// define plugin name for displaying in console.log
+const pluginName = 'PostCSS UUID Obfuscator'
 
 
 /**
- * PostCSS UUID Objuscator
+ * PostCSS UUID Obfuscator
  * This product works on gulp-postcss with gulpfile.mjs
- * @param {Object} options user setting
- * @param {boolean} options.enable make it works
- * @param {number} options.length hashed string length
  */
 export const gulpObfuscator = (options = {}) => {
   const {
@@ -183,9 +202,10 @@ export const gulpObfuscator = (options = {}) => {
   }
 }
 
-//export const postcss = true
 
-
+/**
+ * Applying obfuscated classname to HTML, JS, ...etc
+ */
 export const gulpApplyObfuscated = () => {
   if(!optionsOverride.enable){
     logger('info', pluginName, 'Quit:', 'Cancel to apply obfuscated data')
@@ -241,7 +261,10 @@ export const gulpApplyObfuscated = () => {
 }
 
 
-/** @abstract utils */
+/**
+ * ==========
+ * Utils
+ */
 
 const getRandomName = (className, length, retryCount) => {
   const getRandom = () => {
@@ -569,6 +592,10 @@ const getRelativePath = absolutePath => {
 }
 
 
+const escapeRegExp = string => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+
+/*
 const isFileOrInDirectory = (paths, filePath) => {
   const resolvedFilePath = filePath.replace(/\\/g, '/')
 
@@ -589,6 +616,4 @@ const isFileOrInDirectory = (paths, filePath) => {
 
   return false
 }
-
-
-const escapeRegExp = string => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+*/
