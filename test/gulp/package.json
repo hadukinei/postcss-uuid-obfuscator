@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "clean": "gulp clean",
     "build": "gulp",
-    "dev": "gulp dev",
-    "clean": "gulp clean"
+    "dev": "gulp dev"
   },
   "keywords": [],
   "author": "",

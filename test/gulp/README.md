@@ -17,7 +17,7 @@ npx tailwindcss init
 
 # scripts
 
-- dev (post: 3000)
+- dev (port: 3000)
   - `npm run dev`
 - localhost
   - `npm run build`

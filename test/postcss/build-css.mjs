@@ -24,7 +24,7 @@ import { obfuscator, applyObfuscated } from '../../index.mjs'
  */
 
 // npm run build, or npm run dev
-const isDev = /(^|[\s'"`])dev([\s'"`]|$)/.test(process.title)
+const isDev = /(^|[\s'"`])dev:css/.test(process.title)
 
 // PostCSS UUID Obfuscator: JSON.map file path
 const jsonsPath = 'css-obfuscator'
@@ -78,6 +78,10 @@ const task = async () => {
         length: 3,
         targetPath: 'dist',
         jsonsPath: jsonsPath,
+        /**
+         * gulpではsrcで捕まえたファイル群をストリームで処理していたので、その初期化処理としてfleshはキャッシュ削除として有効だった
+         * postcss単独で行う場合はファイルごとに処理するため、freshをtrueにすると都度初期化してしまうので前回以前の内容を削除してしまうためNG
+         */
         //fresh: true,
         applyClassNameWithoutDot: true,
         classIgnore: ['scrollbar-track', 'scrollbar-thumb'],

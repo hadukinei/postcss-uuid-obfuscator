@@ -3,15 +3,15 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "html": "node build-html.mjs",
-    "js": "node build-js.mjs",
-    "img": "node build-img.mjs",
-    "public": "node build-public.mjs",
+    "clean": "node build-clean.mjs",
+    "common:html": "node build-html.mjs",
+    "common:js": "node build-js.mjs",
+    "common:img": "node build-img.mjs",
+    "common:public": "node build-public.mjs",
     "build:css": "node build-css.mjs -- build",
     "dev:css": "node build-css.mjs -- build",
-    "build": "run-s html js img public build:*",
-    "dev": "run-s html js img public dev:*",
-    "clean": "node build-clean.mjs"
+    "build": "run-s common:* build:*",
+    "dev": "run-s common:* dev:*"
   },
   "keywords": [],
   "author": "",
@@ -28,6 +28,7 @@
     "postcss-csso": "^6.0.1",
     "pug": "^3.0.3",
     "sass": "^1.77.8",
+    "sharp": "^0.33.4",
     "tailwindcss": "^3.4.6"
   }
 }
