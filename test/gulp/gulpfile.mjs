@@ -29,7 +29,7 @@ import autoprefixer from 'autoprefixer'
 import tailwindcss from 'tailwindcss'
 import csso from 'postcss-csso'
 
-import { gulpObfuscator, gulpApplyObfuscated } from '../index.mjs'
+import { obfuscator, applyObfuscated } from '../../index.mjs'
 
 // TypeScript
 import * as esbuild from 'esbuild'
@@ -151,7 +151,7 @@ const task_css = done => {
     tailwindcss(),
     autoprefixer(),
     csso(),
-    gulpObfuscator({
+    obfuscator({
       enable: !isDev,
       length: 3,
       targetPath: 'dist',
@@ -167,7 +167,7 @@ const task_css = done => {
 }
 
 const task_applyObfuscate = done => {
-  gulpApplyObfuscated()
+  applyObfuscated()
 
   done()
 }

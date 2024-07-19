@@ -1,0 +1,33 @@
+{
+  "name": "postcss",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "html": "node build-html.mjs",
+    "js": "node build-js.mjs",
+    "img": "node build-img.mjs",
+    "public": "node build-public.mjs",
+    "build:css": "node build-css.mjs -- build",
+    "dev:css": "node build-css.mjs -- build",
+    "build": "run-s html js img public build:*",
+    "dev": "run-s html js img public dev:*",
+    "clean": "node build-clean.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "esbuild": "^0.23.0",
+    "fs-extra": "^11.2.0",
+    "glob": "^11.0.0",
+    "npm-run-all2": "^6.2.2",
+    "path": "^0.12.7",
+    "postcss": "^8.4.39",
+    "postcss-csso": "^6.0.1",
+    "pug": "^3.0.3",
+    "sass": "^1.77.8",
+    "tailwindcss": "^3.4.6"
+  }
+}

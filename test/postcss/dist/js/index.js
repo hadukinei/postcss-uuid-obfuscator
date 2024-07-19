@@ -1,0 +1,1 @@
+(()=>{var e;(e=document).addEventListener("DOMContentLoaded",(()=>{var o,t;console.log("fired"),null==(o=e.querySelector("._pp1"))||o.addEventListener("click",(e=>(e.stopPropagation(),e.preventDefault(),console.log("red","_pp1"),!1))),null==(t=e.querySelector("._8qh"))||t.addEventListener("click",(e=>(e.stopPropagation(),e.preventDefault(),console.log("blue","_8qh"),!1)))}))})();

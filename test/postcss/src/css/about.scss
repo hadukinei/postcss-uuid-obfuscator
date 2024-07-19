@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+  @apply bg-[#feffff];
+
+  h1{
+    font-size: 100%;
+  }
+}
+
+.c-color{
+  &_blue{
+    @apply text-blue-700;
+  }
+}

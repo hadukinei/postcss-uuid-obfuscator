@@ -67,7 +67,7 @@ const pluginName = 'PostCSS UUID Obfuscator'
  * PostCSS UUID Obfuscator
  * This product works on gulp-postcss with gulpfile.mjs
  */
-export const gulpObfuscator = (options = {}) => {
+export const obfuscator = (options = {}) => {
   const {
     enable,
     length,
@@ -206,7 +206,7 @@ export const gulpObfuscator = (options = {}) => {
 /**
  * Applying obfuscated classname to HTML, JS, ...etc
  */
-export const gulpApplyObfuscated = () => {
+export const applyObfuscated = () => {
   if(!optionsOverride.enable){
     logger('info', pluginName, 'Quit:', 'Cancel to apply obfuscated data')
     return
