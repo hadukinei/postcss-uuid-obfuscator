@@ -1,5 +1,12 @@
 # PostCSS UUID Obfuscator
 
+> State in Draft (2024-07-20 17:43 JST)
+> 
+> **remaining task**
+> - test to install from npmjs
+> - finalize main: index.mjs
+> - write README.md
+
 This is a [PostCSS] plugin which works to hashing (randomizing) class-name with [UUID].
 And also applying to HTML class-attribute, Javascript string replacing.
 I think primary usage is [gulp-postcss] with [gulp] (gulpfile.mjs). But this is also working in JS-API of the PostCSS.
@@ -185,4 +192,3 @@ export const clean = series(
 [TailwindCSS]: https://tailwindcss.com/
 [autoprefixer]: https://github.com/postcss/autoprefixer
 [postcss-csso]: https://github.com/lahmatiy/postcss-csso
-
