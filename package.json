@@ -2,8 +2,9 @@
   "name": "@hadukinei/postcss-uuid-obfuscator",
   "type": "module",
   "version": "0.0.2",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hadukinei/postcss-uuid-obfuscator.git"
   },
   "main": "index.mjs",
   "scripts": {
