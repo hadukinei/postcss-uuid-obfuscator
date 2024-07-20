@@ -1,8 +1,9 @@
 # PostCSS UUID Obfuscator
 
-> State in Draft (2024-07-20 18:02 JST)
+> State in Draft (2024-07-20 18:05 JST)
+> 
 > **update**
-> - token updates
+> - delete option: provenance
 > 
 > **remaining task**
 > - test to install from npmjs
