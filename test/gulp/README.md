@@ -2,7 +2,7 @@
 
 ## npm
 npm init -y
-npm i -D autoprefixer browser-sync esbuild fs-extra glob gulp gulp-filter gulp-plumber gulp-postcss gulp-pug gulp-sass gulp-sharp-optimize-images postcss-csso sass tailwindcss
+npm i -D autoprefixer browser-sync esbuild fs-extra glob gulp gulp-filter gulp-plumber gulp-postcss gulp-pug gulp-sass gulp-sharp-optimize-images postcss-csso postcss-uuid-obfuscator sass tailwindcss
 npm i -D --include-optional sharp
 npm i smooth-scrollbar
 npx tailwindcss init

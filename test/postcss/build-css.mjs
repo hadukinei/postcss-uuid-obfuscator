@@ -16,7 +16,7 @@ import autoprefixer from 'autoprefixer'
 import tailwindcss from 'tailwindcss'
 import csso from 'postcss-csso'
 
-import { cleanObfuscator, obfuscator, applyObfuscated } from '../../index.mjs'
+import { cleanObfuscator, obfuscator, applyObfuscated } from 'postcss-uuid-obfuscator'
 
 
 /**

@@ -1,13 +1,12 @@
 # PostCSS UUID Obfuscator
 
-> State in Draft (2024-07-20 18:05 JST)
+> State in Draft (2024-07-20 18:53 JST)
 > 
 > **update**
-> - delete option: provenance
+> - npmjs registration
+> - demo
 > 
 > **remaining task**
-> - test to install from npmjs
-> - finalize main: index.mjs
 > - write README.md
 
 This is a [PostCSS] plugin which works to hashing (randomizing) class-name with [UUID].
