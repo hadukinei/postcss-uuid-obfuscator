@@ -9,6 +9,7 @@
 > - write README.md
 > - finalize
 
+🇺🇸
 This is a [PostCSS] plugin which works to hashing (randomizing) class-name with [UUID].
 And also applying to HTML class-attribute, Javascript string replacing.
 
@@ -16,6 +17,7 @@ I think primary usage is [gulp-postcss] with [gulp] (gulpfile.mjs) pipeline. But
 This plugin is very inspired a [postcss-obfuscator], and thank you so much.
 
 
+🇯🇵
 この[PostCSS]プラグインはクラス名を[UUID]などでハッシュ化します。
 そしてハッシュ化したクラス名を、HTMLファイルのclass属性やJavascriptの文字列に対して置換処理を適用します。
 
@@ -168,11 +170,15 @@ npm install autoprefixer fs-extra gulp gulp-postcss gulp-sass postcss-csso postc
 ```
 
 Install npm packages above.
+
 There are written in SCSS syntax.
+
 And using with [TailwindCSS], [autoprefixer], [postcss-csso].
 
 上記のnpmパッケージがインストールされているものとします。
+
 SCSS構文で、TailwindCSS・autoprefixer・postcss-cssoを併用するサンプルです。
+
 `npx tailwindcss init`の初期化処理は完了しているものとします。
 
 [TailwindCSS]: https://tailwindcss.com/
@@ -370,7 +376,9 @@ npm install autoprefixer fs-extra glob npm-run-all2 path postcss postcss-csso po
 ```
 
 上記のnpmパッケージがインストールされているものとします。
+
 SCSS構文で、TailwindCSS・autoprefixer・postcss-cssoを併用するサンプルです。
+
 `npx tailwindcss init`の初期化処理は完了しているものとします。
 
 
@@ -416,6 +424,7 @@ let taskFiles = 0
 
 1. オートリロードを想定している開発モードではハッシュ化処理に時間がかかって邪魔になります。
 処理の可否を決定するための変数を定義しておきます。
+
 上例では `process.title` を使っていますが、環境変数を使うなど方法に制限はありません。
 
 2. ハッシュ化処理の結果をJSON形式で保存します。
