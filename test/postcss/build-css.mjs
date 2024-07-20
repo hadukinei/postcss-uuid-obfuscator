@@ -71,12 +71,6 @@ const task = async () => {
       tailwindcss(),
       autoprefixer(),
       csso(),
-      /**
-       * ループでpostcssを回している関係から、複数のエントリポイント（*.scss）ファイルを作成した場合、最後に読み込んだものしか反映されずそれ以前のものは上書き消去されてしまう
-       * postcssの場合はエントリポイントファイルを１つにまとめることが必須
-       * 逆にgulpの場合はストリームで処理しているためエントリポイントは複数あっても問題ない
-       * そしてobfuscatorを使わない npm run dev の場合は当然postcssでもエントリポイントは複数あっても問題なし
-       */
       obfuscator({
         enable: !isDev,
         length: 3,

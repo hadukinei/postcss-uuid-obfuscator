@@ -153,9 +153,6 @@ const task_css = done => {
     tailwindcss(),
     autoprefixer(),
     csso(),
-    /**
-     * postcss単独とは異なり、複数のエントリポイントを作成してもよい
-     */
     obfuscator({
       enable: !isDev,
       length: 3,

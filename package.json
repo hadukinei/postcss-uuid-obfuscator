@@ -1,13 +1,19 @@
 {
   "name": "postcss-uuid-obfuscator",
   "type": "module",
-  "version": "0.0.3",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hadukinei/postcss-uuid-obfuscator.git"
+  },
   "main": "index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "gulp-plugin", "postcss", "postcss-plugin", "obfuscator", "css", "classname", "hash"
+  ],
+  "author": "hadukinei",
   "license": "ISC",
   "description": "This is a [PostCSS] plugin which works to hashing (randomizing) class-name with [UUID]. And also applying to HTML class-attribute, Javascript string replacing. This plugin is very inspired a [postcss-obfuscator], and thank you so much.",
   "devDependencies": {

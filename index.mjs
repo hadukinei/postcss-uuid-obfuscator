@@ -38,21 +38,18 @@ const defaultOptions = {
   retryCount: 100,
   classPrefix: '',
   classSuffix: '',
-  classIgnore: [], // ['c-header']
+  classIgnore: [],
   jsonsPath: 'css-obfuscator',
   targetPath: 'out',
   extensions: {
     html: ['.html', '.htm'],
     javascript: ['.js'],
   },
-  outputExcludes: [], // ex. htmlExcludes, ['.js', '.htm']
-  multi: false,
-  differMulti: false,
-  formatJson: false,
+  outputExcludes: [],
   keepData: true,
   applyClassNameWithoutDot: false,
-  preRun: () => Promise.resolve(), //new Promise(resolve => setTimeout(resolve, 500)), //Promise.resolve(),
-  callBack: () => {},//() => {console.log('done')}
+  preRun: () => Promise.resolve(),
+  callBack: () => {},
 }
 
 // merged options, gulpApplyObfuscated inherited from gulpObfuscator
@@ -85,9 +82,6 @@ export const obfuscator = (options = {}) => {
     targetPath,
     extensions,
     outputExcludes,
-    multi,
-    differMulti,
-    formatJson,
     keepData,
     applyClassNameWithoutDot,
     preRun,
@@ -106,6 +100,9 @@ export const obfuscator = (options = {}) => {
 
   const lockFilePath = '.obfuscator.lock'
   const fresh = true
+  const multi = false
+  const differMulti = false
+  const formatJson = false
 
   return {
     postcssPlugin: pluginName,
