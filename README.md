@@ -9,7 +9,7 @@
 > - write README.md
 > - finalize
 
-<img width="36" height="36" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸">
+<img width="36" height="36" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸">
 This is a [PostCSS] plugin which works to hashing (randomizing) class-name with [UUID].
 And also applying to HTML class-attribute, Javascript string replacing.
 
@@ -17,7 +17,7 @@ I think primary usage is [gulp-postcss] with [gulp] (gulpfile.mjs) pipeline. But
 This plugin is very inspired a [postcss-obfuscator], and thank you so much.
 
 
-<img width="36" height="36" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵">
+<img width="36" height="36" align="left" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵">
 この[PostCSS]プラグインはクラス名を[UUID]などでハッシュ化します。
 そしてハッシュ化したクラス名を、HTMLファイルのclass属性やJavascriptの文字列に対して置換処理を適用します。
 
