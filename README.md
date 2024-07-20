@@ -96,7 +96,7 @@ const jsonsPath = 'css-obfuscator'
 そのためのフォルダ名を変数として定義します。
 
 
-### gulp task: main
+### Task: main
 
 ```javascript
 // CSS <= SCSS
@@ -127,7 +127,7 @@ const task_css = done => {
 ```
 
 
-### gulp task: apply
+### Task: apply
 
 ```javascript
 const task_applyObfuscate = done => {
@@ -138,7 +138,7 @@ const task_applyObfuscate = done => {
 ```
 
 
-### gulp task: clean
+### Task: clean
 
 ```javascript
 const task_clean = done => {
