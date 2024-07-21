@@ -18,10 +18,10 @@ This plugin is very inspired a [postcss-obfuscator], and thank you so much.
 
 
 <img width="36" height="36" align="left" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵">
-　この[PostCSS]プラグインはクラス名を[UUID]などでハッシュ化します。
+この[PostCSS]プラグインはクラス名を[UUID]などでハッシュ化します。
 そしてハッシュ化したクラス名を、HTMLファイルのclass属性やJavascriptの文字列に対して置換処理を適用します。
 
-　基本的には[gulp-postcss]によって読み込まれ、[gulp] (gulpfile.mjs) パイプラインでの動作を想定していますがJS-APIでのPostCSSでも動作します。
+基本的には[gulp-postcss]によって読み込まれ、[gulp] (gulpfile.mjs) パイプラインでの動作を想定していますがJS-APIでのPostCSSでも動作します。
 このプラグイン作成には[postcss-obfuscator]から多くの影響を受けています。
 
 [PostCSS]: https://github.com/postcss/postcss
