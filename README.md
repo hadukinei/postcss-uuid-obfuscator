@@ -10,10 +10,10 @@
 > - finalize
 
 <img width="36" height="36" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸">
-This is a [PostCSS] plugin which works to hashing (randomizing) class-name with [UUID].
+　This is a [PostCSS] plugin which works to hashing (randomizing) class-name with [UUID].
 And also applying to HTML class-attribute, Javascript string replacing.
 
-I think primary usage is [gulp-postcss] with [gulp] (gulpfile.mjs) pipeline. But this is also working in JS-API of the PostCSS.
+　I think primary usage is [gulp-postcss] with [gulp] (gulpfile.mjs) pipeline. But this is also working in JS-API of the PostCSS.
 This plugin is very inspired a [postcss-obfuscator], and thank you so much.
 
 
