@@ -19,6 +19,6 @@ jobs:
           always-auth: true
           scope: '@hadukinei'
       - run: npm ci
-      - run: npm publish --otp=265925
+      - run: npm publish --otp=586635
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
