@@ -209,6 +209,7 @@ export const obfuscator = (options = {}) => {
 /**
  * Applying obfuscated classname to HTML, JS, ...etc
  */
+let waitCount = 0, waitMax = 10
 export const applyObfuscated = () => {
   if(!optionsOverride.enable){
     logger('info', pluginName, 'Quit:', 'Cancel to apply obfuscated data')
@@ -249,7 +250,9 @@ export const applyObfuscated = () => {
   }
 
   const waitForObfuscation = () => {
-    if(!fs.existsSync(lockFilePath)){
+    if(waitCount > waitMax){
+      logger('warn', pluginName, 'LockFile:', 'timeout checking.')
+    }else if(!fs.existsSync(lockFilePath)){
       setTimeout(() => {
         logger('info', pluginName, 'LockFile:', 'checking...')
         waitForObfuscation()
@@ -258,6 +261,8 @@ export const applyObfuscated = () => {
       logger('info', pluginName, 'LockFile found:', lockFilePath)
       applyMain()
     }
+
+    waitCount ++;
   }
 
   waitForObfuscation()
