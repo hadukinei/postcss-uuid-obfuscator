@@ -1,7 +1,7 @@
 {
   "name": "postcss-uuid-obfuscator",
   "type": "module",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/hadukinei/postcss-uuid-obfuscator.git"
@@ -16,7 +16,7 @@
   "author": "hadukinei",
   "license": "ISC",
   "description": "This is a [PostCSS] plugin which works to hashing (randomizing) class-name with [UUID]. And also applying to HTML class-attribute, Javascript string replacing. This plugin is very inspired a [postcss-obfuscator], and thank you so much.",
-  "devDependencies": {
+  "dependencies": {
     "css-selector-parser": "^3.0.5",
     "escodegen": "^2.1.0",
     "espree": "^10.1.0",
