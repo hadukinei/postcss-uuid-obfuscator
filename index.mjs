@@ -270,12 +270,21 @@ export const applyObfuscated = () => {
  */
 
 const getRandomName = (className, length, retryCount) => {
+  const chars = '0123456789abcdefghijklmnopqrstuv'.split('')
+
   const getRandom = () => {
-    let randomString = hashSync(className + "\t" + seed, {
-      encoding: 'base64',
+    const hashed = hashSync(className + "\t" + seed, {
+      encoding: 'hex',
       algorithm: 'sha512',
-    }).substring(0, length).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '')
-    randomString = '_' + randomString.toLowerCase()
+    })
+    const randomString = (
+      '111' + hashed.split('').map(
+        c => ('0000' + parseInt('0x' + c).toString(2)).slice(-4)
+      ).join('')
+    )
+    .match(/.{5}/g)
+    .map(b => chars[parseInt(b, 2)]).join('')
+    .substring(0, length)
 
     return randomString
   }
