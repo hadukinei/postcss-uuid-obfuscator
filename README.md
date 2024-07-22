@@ -8,20 +8,22 @@
 > **remaining task**
 > - finalize
 
+<img width="24" height="24" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸">
+
 This is a [PostCSS] plugin which works to hash-nization (randomizing) class-name with [UUID].
 And also applying to HTML class-attribute, Javascript string replacing.
 
 I think primary usage is [gulp-postcss] with [gulp] (gulpfile.mjs) pipeline. But this is also working in JS-API of the PostCSS.
 This plugin is very inspired a [postcss-obfuscator], and thank you so much.
-<img width="24" height="24" align="right" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸">
 
+
+<img width="24" height="24" align="left" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵">
 
 この[PostCSS]プラグインはクラス名を[UUID]などでハッシュ化します。
 そしてハッシュ化したクラス名を、HTMLファイルのclass属性やJavascriptの文字列に対して置換処理を適用します。
 
 基本的には[gulp-postcss]によって読み込まれ、[gulp] (gulpfile.mjs) パイプラインでの動作を想定していますがJS-APIでのPostCSSでも動作します。
 このプラグイン作成には[postcss-obfuscator]から多くの影響を受けています。
-<img width="24" height="24" align="right" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵">
 
 [PostCSS]: https://github.com/postcss/postcss
 [UUID]: https://github.com/uuidjs/uuid
@@ -485,7 +487,7 @@ I will prepare for workable sample in test/postcss folder.
 Define scripts above in a package.json.
 
 Almost tasks are used by other tasks.
-There are only 3 tasks actually. clean, build, dev.
+There are only 3 tasks actually. clean, and build, dev.
 It seems to be same as gulp.
 
 Please set CSS task to order in the last.
