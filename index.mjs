@@ -302,9 +302,9 @@ const getRandomName = (className, length, retryCount) => {
       algorithm: 'sha512',
     })
     const randomString = (
-      '111' + hashed.split('').map(
+      '1' + hashed.split('').map(
         c => ('0000' + parseInt('0x' + c).toString(2)).slice(-4)
-      ).join('')
+      ).join('') + '11'
     )
     .match(/.{5}/g)
     .map(b => chars[parseInt(b, 2)]).join('')
