@@ -25,7 +25,7 @@ html.is--light(lang="en")
           li
             a.c-header--link--anchor(href="./") index
           li
-            a.c-header--link--anchor(href="./about.html") about
+            a.c-header--link--anchor(href=`./about${locals.isPHP? ".php": ".html"}`) about
         ul.c-header--color_theme
           li
             button.c-header--color_theme--button.c-header--color_theme--button_light(aria-label="light")

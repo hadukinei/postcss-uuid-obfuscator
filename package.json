@@ -1,7 +1,7 @@
 {
   "name": "postcss-uuid-obfuscator",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.1.0-alpha",
   "repository": {
     "type": "git",
     "url": "https://github.com/hadukinei/postcss-uuid-obfuscator.git"
@@ -11,7 +11,18 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "gulp-plugin", "postcss", "postcss-plugin", "obfuscator", "obfuscation", "css", "classname", "hash", "uuid"
+    "gulp-plugin",
+    "postcss",
+    "postcss-plugin",
+    "obfuscator",
+    "obfuscation",
+    "hash",
+    "uuid",
+    "css",
+    "classname",
+    "HTML",
+    "PHP",
+    "javascript"
   ],
   "author": "hadukinei",
   "license": "ISC",
@@ -22,6 +33,7 @@
     "espree": "^10.1.0",
     "estraverse": "^5.3.0",
     "fs-extra": "^11.2.0",
+    "gyros": "^1.0.6",
     "hasha": "^6.0.0",
     "node-html-parser": "^6.1.13",
     "postcss": "^8.4.39",

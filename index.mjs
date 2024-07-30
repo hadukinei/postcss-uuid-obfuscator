@@ -6,13 +6,21 @@
 import path from 'path'
 import fs from 'fs-extra'
 
-// Syntax
+// Syntax - CSS
 import { createParser } from 'css-selector-parser'
+
+// Syntax - HTML
 import { parse as htmlParser } from 'node-html-parser'
+
+// Syntax - Javascript
 import * as espree from 'espree'
 import estraverse from 'estraverse'
 import escodegen from 'escodegen'
 
+// Syntax - PHP
+import { gyros } from 'gyros'
+
+// Syntax - Transfer from AST to minified string
 import { minify } from 'terser'
 
 // Hash for Crypt
@@ -44,8 +52,9 @@ const defaultOptions = {
   extensions: {
     html: ['.html', '.htm'],
     javascript: ['.js'],
+    php: ['.php'],
   },
-  outputExcludes: [],
+  outputExcludes: ['.webp', '.png', '.jpg', '.jpeg', '.gif', '.ico', '.map', '.webmanifest'],
   keepData: true,
   applyClassNameWithoutDot: false,
   preRun: () => Promise.resolve(),
@@ -58,6 +67,8 @@ let optionsOverride = {}
 // define plugin name for displaying in console.log
 const pluginName = 'PostCSS UUID Obfuscator'
 
+const lockFilePath = '.obfuscator.lock'
+
 
 /**
  * PostCSS UUID Obfuscator
@@ -67,6 +78,11 @@ export const cleanObfuscator = jsonsPath => {
   if(fs.existsSync(jsonsPath)){
     fs.rmSync(jsonsPath, {recursive: true})
     logger('info', pluginName, 'Data removed:', jsonsPath)
+  }
+
+  if(fs.existsSync(lockFilePath)){
+    fs.rmSync(lockFilePath, {recursive: true})
+    logger('info', pluginName, 'Data removed:', lockFilePath)
   }
 }
 
@@ -98,7 +114,6 @@ export const obfuscator = (options = {}) => {
   optionsOverride.classesNo = 0
   optionsOverride.isComplete = false
 
-  const lockFilePath = '.obfuscator.lock'
   const fresh = true
   const multi = false
   const differMulti = false
@@ -359,13 +374,18 @@ const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPa
       fs.readdirSync(filePath).forEach(subFilePath => {
         replaceJsonKeysInFile(path.join(filePath, subFilePath))
       })
+    }else if(outputExcludes.includes(fileExt)){
+      logger('info', pluginName, 'Replacement ignored by outputExcludes setting:', filePath)
     }else if(!outputExcludes.includes(path.basename(filePath)) && extensions.html.includes(fileExt)){
       //replace html
+      logger('info', pluginName, 'Execute HTML:', filePath)
+
       let fileContent = fs.readFileSync(filePath, 'utf-8')
       let parsed = htmlParser(fileContent)
       const nodes = parsed.querySelectorAll('[class]')
 
       Object.keys(jsonData).forEach(key => {
+        logger('info', pluginName, 'Finding class:', `[${filePath}] ${key}`)
         nodes.forEach(node => {
           if(node.classList.contains(key.slice(1))){
             node.classList.remove(key.slice(1))
@@ -378,6 +398,8 @@ const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPa
       fs.writeFileSync(filePath, transformed)
     }else if(!outputExcludes.includes(path.basename(filePath)) && extensions.javascript.includes(fileExt)){
       //replace javascript
+      logger('info', pluginName, 'Execute Javascript:', filePath)
+
       let fileContent = fs.readFileSync(filePath, 'utf-8')
       const ast = espree.parse(fileContent, {ecmaVersion: 6})
 
@@ -389,6 +411,8 @@ const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPa
             let isHit = false
 
             Object.keys(jsonData).forEach(key => {
+              logger('info', pluginName, 'Finding class:', `[${filePath}] ${key}`)
+
               let findRegex = new RegExp(`([\\s"'\\\`]|^)(${escapeRegExp(key)})(?=$|[\\s"'\\\`])`, 'g')
               if(findRegex.test(twig.value)){
                 isHit = true
@@ -422,6 +446,34 @@ const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPa
       let regenerate = escodegen.generate(ast)
       var minified = await minify(regenerate)
       fs.writeFileSync(filePath, minified.code)
+    }else if(!outputExcludes.includes(path.basename(filePath)) && extensions.php.includes(fileExt)){
+      //replace php
+      logger('info', pluginName, 'Execute PHP:', filePath)
+
+      let fileContent = fs.readFileSync(filePath, 'utf-8')
+
+      let regenerate = gyros(fileContent, {parseMode: 'code'}, () => {});
+
+      Object.keys(jsonData).forEach(key => {
+        logger('info', pluginName, 'Finding class:', `[${filePath}] ${key}`)
+        regenerate = gyros(regenerate.toString(), {parseMode: 'code'}, (node, {update}) => {
+          if(/(string|inline)/.test(node.kind)){
+            let escapeRegex = new RegExp(`(^|[\\s"'\\\`])${escapeRegExp(key)}([\\s"'\\\`]|$)`, 'g')
+            if(escapeRegex.test(node.raw)){
+              update(node.raw.replace(escapeRegex, "$1" + jsonData[key] + "$2"))
+            }
+
+            if(applyClassNameWithoutDot){
+              escapeRegex = new RegExp(`(^|[\\s"'\\\`])${escapeRegExp(key.slice(1))}([\\s"'\\\`]|$)`, 'g')
+              if(escapeRegex.test(node.raw)){
+                update(node.raw.replace(escapeRegex, "$1" + jsonData[key].slice(1) + "$2"))
+              }
+            }
+          }
+        })
+      })
+
+      fs.writeFileSync(filePath, regenerate.toString())
     }
 
     if(!keepData){
@@ -483,6 +535,8 @@ const getFileCount = (directoryPath, extensions, expludePathsOrFiles = []) => {
     }else if(extensions.hasOwnProperty('html') && (extensions.html).some(extension => file.endsWith(extension)) && !isExcluded){
       count ++
     }else if(extensions.hasOwnProperty('javascript') && (extensions.javascript).some(extension => file.endsWith(extension)) && !isExcluded){
+      count ++
+    }else if(extensions.hasOwnProperty('php') && (extensions.php).some(extension => file.endsWith(extension)) && !isExcluded){
       count ++
     }
   })

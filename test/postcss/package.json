@@ -19,6 +19,7 @@
   "description": "",
   "devDependencies": {
     "autoprefixer": "^10.4.19",
+    "dotenv": "^16.4.5",
     "esbuild": "^0.23.0",
     "fs-extra": "^11.2.0",
     "glob": "^11.0.0",

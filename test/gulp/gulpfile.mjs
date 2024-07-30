@@ -1,16 +1,20 @@
 /**
- * load package
+ * load packages
  */
 
 // Stream
 import { watch, series, src, dest } from 'gulp'
 import plumber from 'gulp-plumber'
 import filter from 'gulp-filter'
+import gulpIf from 'gulp-if'
+import rename from 'gulp-rename'
 
 import { glob } from 'glob'
 
 import fs from 'fs-extra'
 
+// Config
+import { configDotenv } from 'dotenv'
 
 // Image
 import sharpOptimizeImages from 'gulp-sharp-optimize-images'
@@ -29,18 +33,25 @@ import autoprefixer from 'autoprefixer'
 import tailwindcss from 'tailwindcss'
 import csso from 'postcss-csso'
 
-import { cleanObfuscator, obfuscator, applyObfuscated } from 'postcss-uuid-obfuscator'
+//import { cleanObfuscator, obfuscator, applyObfuscated } from 'postcss-uuid-obfuscator'
+import { cleanObfuscator, obfuscator, applyObfuscated } from '../../index.mjs'
 
 // TypeScript
 import * as esbuild from 'esbuild'
 
 // Live server
 import browserSync from 'browser-sync'
+import connectPHP from 'gulp-connect-php';
 
 
 /**
- * const variable
+ * Variables
  */
+
+// dotenv
+const dotenvData = configDotenv({path: '.env'}).parsed ?? {};
+const isPHP = /true/.test(dotenvData.IS_PHP ?? 'false')
+const PHP_INI = dotenvData.PHP_INI ?? ''
 
 // npm run build, or npm run dev
 const isDev = /(^|[\s'"`])dev([\s'"`]|$)/.test(process.title)
@@ -50,7 +61,7 @@ const jsonsPath = 'css-obfuscator'
 
 
 /**
- * Task
+ * Tasks
  */
 
 // Copy
@@ -113,7 +124,17 @@ const task_html = done => {
     allowEmpty: true,
   })
   .pipe(plumber())
-  .pipe(pug())
+  .pipe(pug({
+    locals: {
+      isPHP: isPHP
+    },
+    filters: {
+      "php": text => "<?php\r\n" + text + "\r\n?>"
+    },
+  }))
+  .pipe(gulpIf(isPHP, rename({
+    extname: '.php',
+  })))
   .pipe(dest('dist'))
 
   done()
@@ -197,11 +218,30 @@ const task_watch = done => {
 }
 
 const task_server = done => {
-  browserSync.init({
-    server: {
-      baseDir: './dist',
-    },
-  })
+  if(isPHP){
+    let options = {
+      base: 'dist',
+      port: 8880,
+    }
+    if(PHP_INI !== ''){
+      options.ini = PHP_INI
+    }
+
+    connectPHP.server(
+      options,
+      () => {
+        browserSync.init({
+          proxy: 'localhost:8880'
+        })
+      },
+    )
+  }else{
+    browserSync.init({
+      server: {
+        baseDir: './dist',
+      },
+    })
+  }
 
   done()
 }

@@ -1,5 +1,19 @@
 # PostCSS UUID Obfuscator
 
+> Ready to update: version 1.1
+> 
+> Breaking change
+> - Enable PHP
+> - Adding setting
+>
+> Previous update
+> - Enable PHP
+> - Adding setting
+>
+> Task remained
+> - Test
+> - Update README.md
+
 <img width="24" height="24" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸">
 
 This is a [PostCSS] plugin which works to hash-nization (randomizing) class-name with [UUID].
