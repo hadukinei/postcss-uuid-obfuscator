@@ -54,7 +54,11 @@ const defaultOptions = {
     javascript: ['.js'],
     php: ['.php'],
   },
-  outputExcludes: ['.webp', '.png', '.jpg', '.jpeg', '.gif', '.ico', '.map', '.webmanifest'],
+  outputExcludes: [
+    '.webp', '.png', '.jpg', '.jpeg', '.gif', '.ico',
+    '.map', '.webmanifest',
+    '.mp4', '.webm', '.ogg'
+  ],
   keepData: true,
   applyClassNameWithoutDot: false,
   preRun: () => Promise.resolve(),

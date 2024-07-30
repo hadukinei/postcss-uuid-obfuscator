@@ -1,35 +1,27 @@
 # PostCSS UUID Obfuscator
 
-> Ready to update: version 1.1
-> 
-> Breaking change
-> - Enable PHP
-> - Adding setting
->
-> Previous update
-> - Enable PHP
-> - Adding setting
->
-> Task remained
-> - Test
-> - Update README.md
-
 <img width="24" height="24" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸">
 
 This is a [PostCSS] plugin which works to hash-nization (randomizing) class-name with [UUID].
-And also applying to HTML class-attribute, Javascript string replacing.
+And also applying to HTML class-attribute, Javascript and PHP string replacing.
+Limiting where are targeted, so this will NOT replace characters like a variable name.
 
 I think primary usage is [gulp-postcss] with [gulp] (gulpfile.mjs) pipeline. But this is also working in JS-API of the PostCSS.
 This plugin is very inspired a [postcss-obfuscator], and thank you so much.
+
+Please check about [notice 2](#notice-2-about-php--php処理について) if you output PHP files.
 
 
 <img width="24" height="24" align="left" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵">
 
 この[PostCSS]プラグインはクラス名を[UUID]などでハッシュ化します。
-そしてハッシュ化したクラス名を、HTMLファイルのclass属性やJavascriptの文字列に対して置換処理を適用します。
+そしてハッシュ化したクラス名を、HTMLファイルのclass属性・JavascriptやPHPの文字列などに対して置換処理を適用します。
+ハッシュ化する範囲を限定しているため変数名を置換することはありません。
 
 基本的には[gulp-postcss]によって読み込まれ、[gulp] (gulpfile.mjs) パイプラインでの動作を想定していますがJS-APIでのPostCSSでも動作します。
 このプラグイン作成には[postcss-obfuscator]から多くの影響を受けています。
+
+PHPでの処理については[注釈2](#notice-2-about-php--php処理について)を参照してください。
 
 [PostCSS]: https://github.com/postcss/postcss
 [UUID]: https://github.com/uuidjs/uuid
@@ -82,6 +74,7 @@ This plugin is very inspired a [postcss-obfuscator], and thank you so much.
     - [options.preRun](#optionsprerun)
     - [options.callBack](#optionscallback)
       - [Notice 1.: hash-nated className / ハッシュ化したクラス名](#notice-1-hash-nated-classname--ハッシュ化したクラス名)
+      - [Notice 2.: About PHP / PHP処理について](#notice-2-about-php--php処理について)
 
 
 ---
@@ -230,7 +223,7 @@ Define scripts above in a package.json.
 ### Install npm package / npmパッケージのインストール
 
 ```
-npm install autoprefixer fs-extra gulp gulp-postcss gulp-sass postcss-csso postcss-uuid-obfuscator sass tailwindcss
+npm install autoprefixer dotenv fs-extra gulp gulp-connect-php gulp-if gulp-postcss gulp-rename gulp-sass postcss-csso postcss-uuid-obfuscator sass tailwindcss
 ```
 
 <img width="24" height="24" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸">
@@ -547,7 +540,7 @@ Please set CSS task to order in the last.
 ### Install npm package / npmパッケージのインストール
 
 ```
-npm install autoprefixer fs-extra glob npm-run-all2 path postcss postcss-csso postcss-uuid-obfuscator sass tailwindcss
+npm install autoprefixer dotenv fs-extra glob npm-run-all2 path postcss postcss-csso postcss-uuid-obfuscator sass tailwindcss
 ```
 
 <img width="24" height="24" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸">
@@ -814,9 +807,6 @@ const options = {
   targetPath,
   extensions,
   outputExcludes,
-  multi,
-  differMulti,
-  formatJson,
   keepData,
   applyClassNameWithoutDot,
   preRun,
@@ -970,28 +960,29 @@ Bad case: if set a **input folder** to this option, this package might disrupt o
 
 It defines filename extensions that is target by this package.
 
-Default value: {html: ['.html', '.htm'], javascript: ['.js']}
+Default value: {html: ['.html', '.htm'], javascript: ['.js'], php: ['.php']} [notice 2](#notice-2-about-php--php処理について)
 
 > I recommend you do NOT change this setting, excluding without especially reasons.
 
-In available version of the PostCSS UUID Obfuscator that ONLY implements [node-html-parser] as HTML parser and [espree] as Javascript parser.
-Even if you set a value like `{html: ['.php'], javascript['.ts', '.jsx']}` (even if you wish other files to be enabled as same about PHP, TypeScript, and JSX.); but these are ignored because the parser does not implement yet. Best regards, thank you.
+In available version of the PostCSS UUID Obfuscator that ONLY implements [node-html-parser] as HTML parser, [espree] as Javascript parser, and [gyros] as PHP parser.
+Even if you set a value like `{javascript['.ts', '.jsx']}` (even if you wish other files to be enabled as same about TypeScript, JSX, etc..); but these are ignored because the parser does not implement yet. Best regards, thank you.
 
 
 <img width="24" height="24" align="left" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵">
 
 変換対象のファイル拡張子を定義しています。
 
-初期値: {html: ['.html', '.htm'], javascript: ['.js']}
+初期値: {html: ['.html', '.htm'], javascript: ['.js'], php: ['.php']} [注釈2](#notice-2-about-php--php処理について)
 
 
 > 特別な理由がない場合は設定変更しないことを強く推奨します。
 
-現段階ではHTMLパーサの[node-html-parser]と、Javascriptパーサの[espree]のみ実装しています。
-JSXやTypeScript、PHPなどを読み込ませようと`html: ['.php']`のように設定したとしても動作しません。
+現段階ではHTMLパーサの[node-html-parser]と、Javascriptパーサの[espree]、そしてPHPパーサの[gyros]のみ実装しています。
+JSXやTypeScriptなど対象外の言語を読み込ませるために`javascript: ['.ts']`のような設定へ変更したとしても動作しません。
 
 [node-html-parser]: https://github.com/taoqf/node-html-parser
 [espree]: https://github.com/eslint/espree
+[gyros]: https://github.com/loilo/gyros
 
 
 ### options.outputExcludes
@@ -1000,7 +991,7 @@ JSXやTypeScript、PHPなどを読み込ませようと`html: ['.php']`のよう
 
 Set filename extensions not to replace characters.
 
-Default value: [] (string[])
+Default value: ['.webp', '.png', '.jpg', '.jpeg', '.gif', '.ico', '.map', '.webmanifest', '.mp4', '.webm', '.ogg'] (string[])
 
 Detailed speaking about inside program, this package scans every files in the fact.
 This option is used to refuse from scanning targets.
@@ -1013,7 +1004,7 @@ Ought to be including a leading period character.
 
 変換対象にしないファイル拡張子を定義します。
 
-初期値: [] (string[])
+初期値: ['.webp', '.png', '.jpg', '.jpeg', '.gif', '.ico', '.map', '.webmanifest', '.mp4', '.webm', '.ogg'] (string[])
 
 内部的には全ファイルを走査しているため、その対象から外す処理が行われます。
 `['.js', '.html']`のように、ピリオド付きのファイル拡張子を指定してください。
@@ -1039,7 +1030,7 @@ Default value: true (boolean)
 
 <img width="24" height="24" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸">
 
-In Javascript case.
+In Javascript and PHP case.
 In normally process, let replace class-name leaded by prefix `.` characters (for example: `.c-className`) to hash-nized characters (with leading prefix `.`).
 If you turn to true this option, and also let replace class-name character without prefix `.` (for example: `c-className`).
 
@@ -1060,7 +1051,7 @@ I think the pattern reducts a obfuscator's greedy replacement by separator (whit
 
 <img width="24" height="24" align="left" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵">
 
-Javascriptでの文字置換処理において、`.c-className`のような先頭にピリオドが付いたものだけでなく、`c-className`のようなピリオドを伴わない文字列もハッシュ化クラス名に置き換えるか否か。
+Javascript・PHPでの文字置換処理において、`.c-className`のような先頭にピリオドが付いたものだけでなく、`c-className`のようなピリオドを伴わない文字列もハッシュ化クラス名に置き換えるか否か。
 
 初期値: false (boolean)
 
@@ -1166,3 +1157,76 @@ By the function of No. 5, I can not vouch a length of hash-nated value as equal 
 特に5番目の手順を行っているため、ハッシュ化されたクラス名の文字長はoptions.lenthと必ず一致するとは限りません。
 
 [hasha]: https://github.com/sindresorhus/hasha
+
+---
+
+#### Notice 2.: About PHP / PHP処理について
+
+<img width="24" height="24" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸">
+
+You can see what is acted in the test/gulp and test/postcss, when set in IS_PHP as "true" within the .env file.
+
+You must set applyClassNameWithoutDot as "true", if  want to be apply an hash-ization in PHP files.
+This is for what PHP parser cannot recognize about HTML syntax, which process as inline type it.
+In another word, characters of string type in PHP are replaced correctly because the parser analyze whose syntax.
+
+```html
+<div class="absolute">This is a "absolute" text.</div>
+```
+
+In above case, this package will replace about class-name and paragraph-text both.
+
+```php
+$absolute = "absolute";
+```
+
+In above case, this only works about right-hand side (string type), will ignore about left-hand side (variable).
+
+```php
+echo "<div class='absolute'>" . "abso" . "lute" . "</div>";
+```
+
+In above case, there is splitted character in two. This package cannot recognize that is a target word.
+
+```php
+$absolute = "abso" . "lute";
+echo "<div class='absolute'>This is {$absolute} absolute text.</div>";
+```
+
+In above case, wrote to evade from this package by word splitting in line 1. And the character held to stay by variable expansion in line 2.
+By these workflows, will replace class-name and paragraph-text, but value in variable display as raw text.
+
+
+<img width="24" height="24" align="left" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵">
+
+同梱したtest/gulp・test/postcssでは、.envファイルのIS_PHPを true に設定変更するとPHPでの動作を確認できます。
+
+PHPでのハッシュ化処理を有効にするためには applyClassNameWithoutDot を true にする必要があります。
+これはPHPパーサがHTML構造を理解できないため、まとめてinline型として扱うためです。
+一方でPHPコードについては文法解析を行いますので、適切な文字列に対して置換処理が行われます。
+
+```html
+<div class="absolute">This is a "absolute" text.</div>
+```
+
+上例ではクラス名と文中、両方の「absolute」に対して文字置換処理が行われます。
+
+```php
+$absolute = "absolute";
+```
+
+上例では変数名に対しては置換処理を行わず、文字列型の右辺のみが処理対象となります。
+
+```php
+echo "<div class='absolute'>" . "abso" . "lute" . "</div>";
+```
+
+上例のように文字を分割してしまうと検知できません。
+
+```php
+$absolute = "abso" . "lute";
+echo "<div class='absolute'>This is {$absolute} absolute text.</div>";
+```
+
+上例の場合、1行目では検知されないように回避しています。
+2行目の波括弧による変数展開ではそのまま維持されるため、クラス名と文字列としての absolute は置換される一方で、$absolute はそのまま表示されます。
