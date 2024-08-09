@@ -59,6 +59,7 @@ const defaultOptions = {
     '.map', '.webmanifest',
     '.mp4', '.webm', '.ogg'
   ],
+  scriptType: 'script',
   keepData: true,
   applyClassNameWithoutDot: false,
   preRun: () => Promise.resolve(),
@@ -102,6 +103,7 @@ export const obfuscator = (options = {}) => {
     targetPath,
     extensions,
     outputExcludes,
+    scriptType,
     keepData,
     applyClassNameWithoutDot,
     preRun,
@@ -405,7 +407,10 @@ const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPa
       logger('info', pluginName, 'Execute Javascript:', filePath)
 
       let fileContent = fs.readFileSync(filePath, 'utf-8')
-      const ast = espree.parse(fileContent, {ecmaVersion: 6})
+      const ast = espree.parse(fileContent, {
+        ecmaVersion: 'latest', //6,
+        sourceType: optionsOverride.scriptType,
+      })
 
       estraverse.replace(ast, {
         enter: twig => {

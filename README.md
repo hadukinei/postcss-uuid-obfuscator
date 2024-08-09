@@ -69,6 +69,7 @@ PHPでの処理については[注釈2](#notice-2-about-php--php処理につい�
     - [options.targetPath](#optionstargetpath)
     - [options.extensions](#optionsextensions)
     - [options.outputExcludes](#optionsoutputexcludes)
+    - [options.scriptType](#optionsscripttype)
     - [options.keepData](#optionskeepdata)
     - [options.applyClassNameWithoutDot](#optionsapplyclassnamewithoutdot)
     - [options.preRun](#optionsprerun)
@@ -807,6 +808,7 @@ const options = {
   targetPath,
   extensions,
   outputExcludes,
+  scriptType,
   keepData,
   applyClassNameWithoutDot,
   preRun,
@@ -1008,6 +1010,30 @@ Ought to be including a leading period character.
 
 内部的には全ファイルを走査しているため、その対象から外す処理が行われます。
 `['.js', '.html']`のように、ピリオド付きのファイル拡張子を指定してください。
+
+
+### options.scriptType
+
+<img width="24" height="24" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸">
+
+Set module type of script.
+
+Default value: "script" (string)
+
+You need not change if are in the ESM type.
+
+This method requires in the case of module type (.mjs) and CommonJS type (.cjs).
+
+
+<img width="24" height="24" align="left" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵">
+
+Javascriptのモジュールタイプを指定する。
+
+初期値: "script" (string)
+
+ESM形式の場合は変更する必要はありません。
+
+しかしモジュール形式（.mjsファイル）の場合は "module" と、CommonJS形式（.cjsファイル）の場合は "commonjs" と指定してください。
 
 
 ### options.keepData
