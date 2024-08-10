@@ -27,6 +27,10 @@ import { minify } from 'terser'
 import { v4 as uuid4 } from 'uuid'
 import { hashSync } from 'hasha'
 
+// CLI
+import chalk from 'chalk'
+import * as readline from 'node:readline'
+
 
 /**
  * global variable
@@ -82,12 +86,12 @@ const lockFilePath = '.obfuscator.lock'
 export const cleanObfuscator = jsonsPath => {
   if(fs.existsSync(jsonsPath)){
     fs.rmSync(jsonsPath, {recursive: true})
-    logger('info', pluginName, 'Data removed:', jsonsPath)
+    process.stdout.write(`${chalk.bold.blue("Obfuscator unlink:")} ${chalk.cyan(jsonsPath)}\r\n`)
   }
 
   if(fs.existsSync(lockFilePath)){
     fs.rmSync(lockFilePath, {recursive: true})
-    logger('info', pluginName, 'Data removed:', lockFilePath)
+    process.stdout.write(`${chalk.bold.blue("Obfuscator unlink:")} ${chalk.cyan(lockFilePath)}\r\n`)
   }
 }
 
@@ -130,24 +134,24 @@ export const obfuscator = (options = {}) => {
     Once: async (root, { result }) => {
       if(fs.existsSync(lockFilePath)){
         fs.rmSync(lockFilePath, {recursive: true})
-        logger('info', pluginName, 'LockFile removed:', lockFilePath)
+        process.stdout.write(`${chalk.bold.blue("Obfuscator unlink:")} ${chalk.cyan(lockFilePath)}\r\n`)
       }
 
       if(!enable){
-        logger('info', pluginName, 'Skip:', 'Skipped by setting (enable is false).')
+        process.stdout.write(`${chalk.bold.blue("Obfuscator skip:")} ${chalk.cyan("Skip obfuscation (option.enable is false)")}\r\n`)
         return
       }else if(classPrefix !== '' && /^\d/.test(classPrefix.charAt(0))){
-        logger('warn', pluginName, 'Error:', 'There is a numeric character in the first-letter of classPrefix. className must not start with numeric character.')
+        process.stdout.write(`${chalk.bold.blue("Obfuscator error:")} ${chalk.red("There is a numeric character in the first-letter of classPrefix. className must not start with numeric character.")}\r\n`)
         return
       }else{
         if(processedFiles.size == 0){
           await preRun()
-          logger('info', pluginName, 'PreRun:', 'PreRun event hook finished.')
+          process.stdout.write(`${chalk.bold.blue("Obfuscator prerun:")} ${chalk.cyan("Finished.")}\r\n`)
         }
 
         let cssFile = getRelativePath(result.opts.from)
         optionsOverride.cssNo ++
-        logger('info', pluginName, 'Processing:', cssFile)
+        process.stdout.write(`${chalk.bold.blue("Obfuscator processing:")} ${chalk.cyan(cssFile)}\r\n`)
 
         singleFileData = {}
         if(multi){
@@ -203,16 +207,16 @@ export const obfuscator = (options = {}) => {
 
           if(optionsOverride.cssNo === optionsOverride.cssFilesNo){
             fs.writeFileSync(lockFilePath, '')
-            logger('info', pluginName, 'LockFile created:', lockFilePath)
+            process.stdout.write(`${chalk.bold.blue("Obfuscator create:")} ${chalk.cyan(lockFilePath)}\r\n`)
           }else{
             setTimeout(() => {
               if(!optionsOverride.isComplete){
-                logger('info', pluginName, 'Wait:', 'CSS processing...')
+                process.stdout.write(`${chalk.bold.blue("Obfuscator wait:")} ${chalk.cyan("CSS processing...")}\r\n`)
                 waitforCreation()
               }else{
                 if(fs.existsSync(lockFilePath)){
                   fs.rmSync(lockFilePath, {recursive: true})
-                  logger('info', pluginName, 'LockFile removed:', lockFilePath)
+                  process.stdout.write(`${chalk.bold.blue("Obfuscator unlink:")} ${chalk.cyan(lockFilePath)}\r\n`)
                 }
               }
             }, 1000)
@@ -233,53 +237,55 @@ export const obfuscator = (options = {}) => {
 let waitCount = 0, waitMax = 10
 export const applyObfuscated = () => {
   if(!optionsOverride.enable){
-    logger('info', pluginName, 'Quit:', 'Cancel to apply obfuscated data')
+    process.stdout.write(`${chalk.bold.blue("Obfuscator quit:")} ${chalk.cyan("Cancel to apply obfuscated data.")}\r\n`)
     return
   }
 
   const lockFilePath = '.obfuscator.lock'
 
   const applyMain = () => {
-    logger('info', pluginName, 'Applying:', 'Files (HTML, JS) are transformed by obfuscated data.')
+    process.stdout.write(`${chalk.bold.blue("Obfuscator begin:")} ${chalk.cyan("Applying obfuscated data to files.")}\r\n`)
 
     replaceJsonKeysInFiles(optionsOverride.targetPath, optionsOverride.extensions, optionsOverride.outputExcludes, optionsOverride.jsonsPath, optionsOverride.keepData, optionsOverride.applyClassNameWithoutDot)
-    logger('info', pluginName, 'Replaced:', 'All files have been updated.')
+    process.stdout.write(`${chalk.bold.blue("Obfuscator done:")} ${chalk.cyan("All files have been updated.")}\r\n`)
 
-    logger('success', pluginName, 'Processed:', `${optionsOverride.cssFilesNo}/${getFileCount(
-      optionsOverride.targetPath,
-      {css: ['.css']},
-      []
-    )} CSS| ${getFileCount(
-      optionsOverride.targetPath,
-      optionsOverride.extensions,
-      optionsOverride.outputExcludes
-    )}/${getFileCount(
-      optionsOverride.targetPath,
-      optionsOverride.extensions,
-      []
-    )} Files| ${
-      optionsOverride.classesNo - optionsOverride.classIgnore.length
-    }/${optionsOverride.classesNo} Class`)
+    process.stdout.write(`${chalk.bold.blue("Obfuscator result:")} ${chalk.yellow(
+      optionsOverride.cssFilesNo + "/" + getFileCount(
+        optionsOverride.targetPath,
+        {css: ['.css']},
+        []
+      ) + " CSS| " + getFileCount(
+        optionsOverride.targetPath,
+        optionsOverride.extensions,
+        optionsOverride.outputExcludes
+      ) + "/" + getFileCount(
+        optionsOverride.targetPath,
+        optionsOverride.extensions,
+        []
+      ) + " Files| "
+      + (optionsOverride.classesNo - optionsOverride.classIgnore.length).toString()
+      + "/" + optionsOverride.classesNo.toString() + " Classes"
+    )}\r\n`)
 
     optionsOverride.callBack()
 
     if(fs.existsSync(lockFilePath)){
       fs.rmSync(lockFilePath, {recursive: true})
-      logger('info', pluginName, 'LockFile removed:', lockFilePath)
+      process.stdout.write(`${chalk.bold.blue("Obfuscator unlink:")} ${chalk.cyan(lockFilePath)}\r\n`)
     }
     optionsOverride.isComplete = true
   }
 
   const waitForObfuscation = () => {
     if(waitCount > waitMax){
-      logger('warn', pluginName, 'LockFile:', 'timeout checking.')
+      process.stdout.write(`${chalk.bold.blue("Obfuscator error:")} ${chalk.red("Timeout; to wait a file creation.")}\r\n`)
     }else if(!fs.existsSync(lockFilePath)){
       setTimeout(() => {
-        logger('info', pluginName, 'LockFile:', 'checking...')
+        process.stdout.write(`${chalk.bold.blue("Obfuscator wait:")} ${chalk.cyan("Wait for file creation.")}\r\n`)
         waitForObfuscation()
       }, 1000)
     }else{
-      logger('info', pluginName, 'LockFile found:', lockFilePath)
+      process.stdout.write(`${chalk.bold.blue("Obfuscator succeed:")} ${chalk.cyan("File created.")}\r\n`)
       applyMain()
     }
 
@@ -328,7 +334,7 @@ const getRandomName = (className, length, retryCount) => {
   }while(!hash && count < retryCount)
 
   if(hash === ''){
-    logger('warn', pluginName, 'Error:', 'Cannot found a unique hashed className.')
+    process.stdout.write(`${chalk.bold.blue("Obfuscator error:")} ${chalk.red("Cannot found a unique hashed className.")}\r\n`)
     return null
   }
 
@@ -342,18 +348,18 @@ const writeJsonToFile = (data, filePath, format = true, fresh = false, startOver
   if(startOver){
     if(fs.existsSync(dirPath)){
       fs.rmSync(dirPath, {recursive: true})
-      logger('info', pluginName, 'Directory removed:', dirPath)
+      process.stdout.write(`${chalk.bold.blue("Obfuscator unlink:")} ${chalk.cyan(dirPath)}\r\n`)
     }
   }
 
   if(!fs.existsSync(dirPath)){
     fs.mkdirSync(dirPath, {recursive: true})
-    logger('info', pluginName, 'Directory created:', dirPath)
+    process.stdout.write(`${chalk.bold.blue("Obfuscator create:")} ${chalk.cyan(dirPath)}\r\n`)
   }
 
   if(!fs.existsSync(filePath)){
     fs.writeFileSync(filePath, '{}')
-    logger('info', pluginName, 'File created:', filePath)
+    process.stdout.write(`${chalk.bold.blue("Obfuscator create:")} ${chalk.cyan(filePath)}\r\n`)
   }
 
   let jsonData = fs.readFileSync(filePath)
@@ -362,7 +368,7 @@ const writeJsonToFile = (data, filePath, format = true, fresh = false, startOver
   const outputData = format? JSON.stringify(mergedData, null, 2): JSON.stringify(mergedData)
 
   fs.writeFileSync(filePath, outputData)
-  logger('info', pluginName, 'Data written to file:', filePath)
+  process.stdout.write(`${chalk.bold.blue("Obfuscator write:")} ${chalk.cyan(filePath)}\r\n`)
 }
 
 
@@ -376,22 +382,28 @@ const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPa
 
   const replaceJsonKeysInFile = async filePath => {
     const fileExt = path.extname(filePath).toLowerCase()
+
     if(fs.statSync(filePath).isDirectory()){
       fs.readdirSync(filePath).forEach(subFilePath => {
         replaceJsonKeysInFile(path.join(filePath, subFilePath))
       })
     }else if(outputExcludes.includes(fileExt)){
-      logger('info', pluginName, 'Replacement ignored by outputExcludes setting:', filePath)
+      process.stdout.write(`${chalk.bold.blue("Obfuscator ignore:")} ${chalk.cyan(filePath)}\r\n`)
     }else if(!outputExcludes.includes(path.basename(filePath)) && extensions.html.includes(fileExt)){
       //replace html
-      logger('info', pluginName, 'Execute HTML:', filePath)
+      process.stdout.write(`${chalk.green("\u{2b25}")} ${chalk.bold.blue("Target:")} ${chalk.yellow(filePath)}\r\n`)
 
       let fileContent = fs.readFileSync(filePath, 'utf-8')
       let parsed = htmlParser(fileContent)
       const nodes = parsed.querySelectorAll('[class]')
 
       Object.keys(jsonData).forEach(key => {
-        logger('info', pluginName, 'Finding class:', `[${filePath}] ${key}`)
+        readline.moveCursor(process.stdout, -process.stdout.columns, 0)
+        readline.clearLine(process.stdout, 0)
+        let stdoutStr = `  ${chalk.bold.blue("[" + filePath + "]")} ${chalk.cyan(key)}`
+        stdoutStr = stdoutStr.slice(0, process.stdout.columns)
+        process.stdout.write(stdoutStr)
+
         nodes.forEach(node => {
           if(node.classList.contains(key.slice(1))){
             node.classList.remove(key.slice(1))
@@ -400,15 +412,17 @@ const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPa
         })
       })
 
+      process.stdout.write(`\r\n${chalk.green("\u{2714}")} ${chalk.bold.blue("Processed:")} ${chalk.yellow(filePath)}\r\n`)
+
       const transformed = parsed.toString()
       fs.writeFileSync(filePath, transformed)
     }else if(!outputExcludes.includes(path.basename(filePath)) && extensions.javascript.includes(fileExt)){
       //replace javascript
-      logger('info', pluginName, 'Execute Javascript:', filePath)
+      process.stdout.write(`${chalk.green("\u{2b25}")} ${chalk.bold.blue("Target:")} ${chalk.yellow(filePath)}\r\n`)
 
       let fileContent = fs.readFileSync(filePath, 'utf-8')
       const ast = espree.parse(fileContent, {
-        ecmaVersion: 'latest', //6,
+        ecmaVersion: 'latest',
         sourceType: optionsOverride.scriptType,
       })
 
@@ -420,7 +434,11 @@ const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPa
             let isHit = false
 
             Object.keys(jsonData).forEach(key => {
-              logger('info', pluginName, 'Finding class:', `[${filePath}] ${key}`)
+              readline.moveCursor(process.stdout, -process.stdout.columns, 0)
+              readline.clearLine(process.stdout, 0)
+              let stdoutStr = `  ${chalk.bold.blue("[" + filePath + "]")} ${chalk.cyan(key)}`
+              stdoutStr = stdoutStr.slice(0, process.stdout.columns)
+              process.stdout.write(stdoutStr)
 
               let findRegex = new RegExp(`([\\s"'\\\`]|^)(${escapeRegExp(key)})(?=$|[\\s"'\\\`])`, 'g')
               if(findRegex.test(twig.value)){
@@ -452,19 +470,26 @@ const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPa
         }
       })
 
+      process.stdout.write(`\r\n${chalk.green("\u{2714}")} ${chalk.bold.blue("Processed:")} ${chalk.yellow(filePath)}\r\n`)
+
       let regenerate = escodegen.generate(ast)
       var minified = await minify(regenerate)
       fs.writeFileSync(filePath, minified.code)
     }else if(!outputExcludes.includes(path.basename(filePath)) && extensions.php.includes(fileExt)){
       //replace php
-      logger('info', pluginName, 'Execute PHP:', filePath)
+      process.stdout.write(`${chalk.green("\u{2b25}")} ${chalk.bold.blue("Target:")} ${chalk.yellow(filePath)}\r\n`)
 
       let fileContent = fs.readFileSync(filePath, 'utf-8')
 
       let regenerate = gyros(fileContent, {parseMode: 'code'}, () => {});
 
       Object.keys(jsonData).forEach(key => {
-        logger('info', pluginName, 'Finding class:', `[${filePath}] ${key}`)
+        readline.moveCursor(process.stdout, -process.stdout.columns, 0)
+        readline.clearLine(process.stdout, 0)
+        let stdoutStr = `  ${chalk.bold.blue("[" + filePath + "]")} ${chalk.cyan(key)}`
+        stdoutStr = stdoutStr.slice(0, process.stdout.columns)
+        process.stdout.write(stdoutStr)
+
         regenerate = gyros(regenerate.toString(), {parseMode: 'code'}, (node, {update}) => {
           if(/(string|inline)/.test(node.kind)){
             let escapeRegex = new RegExp(`(^|[\\s"'\\\`])${escapeRegExp(key)}([\\s"'\\\`]|$)`, 'g')
@@ -482,13 +507,15 @@ const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPa
         })
       })
 
+      process.stdout.write(`\r\n${chalk.green("\u{2714}")} ${chalk.bold.blue("Processed:")} ${chalk.yellow(filePath)}\r\n`)
+
       fs.writeFileSync(filePath, regenerate.toString())
     }
 
     if(!keepData){
       if(fs.existsSync(jsonDataPath)){
         fs.rmSync(jsonDataPath, {recursive: true})
-        logger('info', pluginName, 'Data removed:', jsonDataPath)
+        process.stdout.write(`${chalk.bold.blue("Obfuscator unlink:")} ${chalk.cyan(jsonDataPath)}\r\n`)
       }
     }
   }
@@ -643,28 +670,6 @@ const getClassNames = selectorStr => {
 }
 
 
-const logger = (type, issuer, task, data) => {
-  const mainColor = '\x1b[38;2;99;102;241m%s\x1b[0m'
-  switch(type){
-    case 'info':
-    console.info(mainColor, issuer, '\x1b[36m', task, data, '\x1b[0m')
-    break;
-
-    case 'warn':
-    console.info(mainColor, issuer, '\x1b[33m', task, data, '\x1b[0m')
-    break;
-
-    case 'success':
-    console.info(mainColor, issuer, '\x1b[31m', task, data, '\x1b[0m')
-    break;
-
-    default:
-    console.info("'\x1b[0m'", issuer, '\x1b[32m', task, data, '\x1b[0m')
-    break;
-  }
-}
-
-
 const getRelativePath = absolutePath => {
   const currentDirectory = process.cwd()
   const relativePath = path.relative(currentDirectory, absolutePath)
@@ -673,27 +678,3 @@ const getRelativePath = absolutePath => {
 
 
 const escapeRegExp = string => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-
-
-/*
-const isFileOrInDirectory = (paths, filePath) => {
-  const resolvedFilePath = filePath.replace(/\\/g, '/')
-
-  for(const currentPath of paths){
-    const resolvedCurrentPath = currentPath.replace(/\\/g, '/')
-
-    if(resolvedCurrentPath === resolvedFilePath){
-      return true
-    }
-
-    if(resolvedCurrentPath.endsWith('/') && resolvedFilePath.startsWith(resolvedCurrentPath)){
-      const relativeFilePath = resolvedFilePath.substring(resolvedCurrentPath.length)
-      if(!relativeFilePath.startsWith('/') && relativeFilePath !== ''){
-        return true
-      }
-    }
-  }
-
-  return false
-}
-*/

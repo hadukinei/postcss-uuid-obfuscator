@@ -17,6 +17,7 @@ import tailwindcss from 'tailwindcss'
 import csso from 'postcss-csso'
 
 import { cleanObfuscator, obfuscator, applyObfuscated } from 'postcss-uuid-obfuscator'
+//import { cleanObfuscator, obfuscator, applyObfuscated } from '../../index.mjs'
 
 
 /**

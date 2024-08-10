@@ -1,5 +1,9 @@
 # PostCSS UUID Obfuscator
 
+> updated v1.2.0
+> 
+> - change style of logger
+
 <img width="24" height="24" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸">
 
 This is a [PostCSS] plugin which works to hash-nization (randomizing) class-name with [UUID].
