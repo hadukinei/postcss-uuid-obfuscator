@@ -25,7 +25,7 @@ import { minify } from 'terser'
 
 // Hash for Crypt
 import { v4 as uuid4 } from 'uuid'
-import { hashSync } from 'hasha'
+import { sha3_512 } from '@noble/hashes/sha3'
 
 // CLI
 import chalk from 'chalk'
@@ -47,10 +47,11 @@ let tmpClassList = []
 const defaultOptions = {
   enable: true,
   length: 5,
-  retryCount: 100,
-  classPrefix: '',
+  retryCount: 25,
+  classPrefix: 'x--',
   classSuffix: '',
   classIgnore: [],
+  fileIgnore: [],
   jsonsPath: 'css-obfuscator',
   targetPath: 'out',
   extensions: {
@@ -95,6 +96,7 @@ export const cleanObfuscator = jsonsPath => {
   }
 }
 
+let waitCount2 = 0
 export const obfuscator = (options = {}) => {
   const {
     enable,
@@ -103,6 +105,7 @@ export const obfuscator = (options = {}) => {
     classPrefix,
     classSuffix,
     classIgnore,
+    fileIgnore,
     jsonsPath,
     targetPath,
     extensions,
@@ -147,6 +150,8 @@ export const obfuscator = (options = {}) => {
         if(processedFiles.size == 0){
           await preRun()
           process.stdout.write(`${chalk.bold.blue("Obfuscator prerun:")} ${chalk.cyan("Finished.")}\r\n`)
+          fs.writeFileSync(lockFilePath, '')
+          process.stdout.write(`${chalk.bold.blue("Obfuscator create:")} ${chalk.cyan(lockFilePath)}\r\n`)
         }
 
         let cssFile = getRelativePath(result.opts.from)
@@ -208,17 +213,15 @@ export const obfuscator = (options = {}) => {
           if(optionsOverride.cssNo === optionsOverride.cssFilesNo){
             fs.writeFileSync(lockFilePath, '')
             process.stdout.write(`${chalk.bold.blue("Obfuscator create:")} ${chalk.cyan(lockFilePath)}\r\n`)
+          }else if(waitCount2 > optionsOverride.retryCount){
+            process.stdout.write(`${chalk.bold.blue("Obfuscator error:")} ${chalk.red("Timeout; to wait a file creation.")}\r\n`)
           }else{
             setTimeout(() => {
               if(!optionsOverride.isComplete){
-                process.stdout.write(`${chalk.bold.blue("Obfuscator wait:")} ${chalk.cyan("CSS processing...")}\r\n`)
+                process.stdout.write(`${chalk.bold.blue("Obfuscator wait:")} ${chalk.cyan("CSS processing... Count: ")} ${chalk.red((optionsOverride.retryCount - waitCount2).toString() + "/" + optionsOverride.retryCount.toString())}\r\n`)
                 waitforCreation()
-              }else{
-                if(fs.existsSync(lockFilePath)){
-                  fs.rmSync(lockFilePath, {recursive: true})
-                  process.stdout.write(`${chalk.bold.blue("Obfuscator unlink:")} ${chalk.cyan(lockFilePath)}\r\n`)
-                }
               }
+              waitCount2 ++
             }, 1000)
           }
         }
@@ -234,7 +237,7 @@ export const obfuscator = (options = {}) => {
 /**
  * Applying obfuscated classname to HTML, JS, ...etc
  */
-let waitCount = 0, waitMax = 10
+let waitCount = 0
 export const applyObfuscated = () => {
   if(!optionsOverride.enable){
     process.stdout.write(`${chalk.bold.blue("Obfuscator quit:")} ${chalk.cyan("Cancel to apply obfuscated data.")}\r\n`)
@@ -246,42 +249,63 @@ export const applyObfuscated = () => {
   const applyMain = () => {
     process.stdout.write(`${chalk.bold.blue("Obfuscator begin:")} ${chalk.cyan("Applying obfuscated data to files.")}\r\n`)
 
-    replaceJsonKeysInFiles(optionsOverride.targetPath, optionsOverride.extensions, optionsOverride.outputExcludes, optionsOverride.jsonsPath, optionsOverride.keepData, optionsOverride.applyClassNameWithoutDot)
-    process.stdout.write(`${chalk.bold.blue("Obfuscator done:")} ${chalk.cyan("All files have been updated.")}\r\n`)
+    const p = new Promise(r => {
+      r()
+    })
 
-    process.stdout.write(`${chalk.bold.blue("Obfuscator result:")} ${chalk.yellow(
-      optionsOverride.cssFilesNo + "/" + getFileCount(
+    p.then(() => {
+      const countCssAll = getFileCount(
         optionsOverride.targetPath,
         {css: ['.css']},
         []
-      ) + " CSS| " + getFileCount(
+      );
+      const countEvery = getFileCount(
         optionsOverride.targetPath,
         optionsOverride.extensions,
         optionsOverride.outputExcludes
-      ) + "/" + getFileCount(
+      );
+      const countEveryAll = getFileCount(
         optionsOverride.targetPath,
         optionsOverride.extensions,
         []
-      ) + " Files| "
-      + (optionsOverride.classesNo - optionsOverride.classIgnore.length).toString()
-      + "/" + optionsOverride.classesNo.toString() + " Classes"
-    )}\r\n`)
+      );
+      return [countCssAll, countEvery, countEveryAll]
+    })
+    .then(arr => {
+      process.stdout.write(`${chalk.bold.blue("Obfuscator result:")} ${chalk.yellow(
+        arr[0] + " CSS| " + arr[1] + "/" + arr[2] + " Files| "
+        + (optionsOverride.classesNo - optionsOverride.classIgnore.length).toString()
+        + "/" + optionsOverride.classesNo.toString() + " Classes"
+      )}\r\n`)
 
-    optionsOverride.callBack()
-
-    if(fs.existsSync(lockFilePath)){
-      fs.rmSync(lockFilePath, {recursive: true})
-      process.stdout.write(`${chalk.bold.blue("Obfuscator unlink:")} ${chalk.cyan(lockFilePath)}\r\n`)
-    }
-    optionsOverride.isComplete = true
+      return new Promise(r => {
+        setTimeout(() => {
+          r()
+        }, 3000)
+      })
+    })
+    .then(() => {
+      replaceJsonKeysInFiles(optionsOverride.targetPath, optionsOverride.extensions, optionsOverride.outputExcludes, optionsOverride.jsonsPath, optionsOverride.keepData, optionsOverride.applyClassNameWithoutDot, optionsOverride.fileIgnore)
+      process.stdout.write(`${chalk.bold.blue("Obfuscator done:")} ${chalk.cyan("All files have been updated.")}\r\n`)
+    })
+    .then(() => {
+      optionsOverride.callBack()
+    })
+    .finally(() => {
+      if(fs.existsSync(lockFilePath)){
+        fs.rmSync(lockFilePath, {recursive: true})
+        process.stdout.write(`${chalk.bold.blue("Obfuscator unlink:")} ${chalk.cyan(lockFilePath)}\r\n`)
+      }
+      optionsOverride.isComplete = true
+    })
   }
 
   const waitForObfuscation = () => {
-    if(waitCount > waitMax){
+    if(waitCount > optionsOverride.retryCount){
       process.stdout.write(`${chalk.bold.blue("Obfuscator error:")} ${chalk.red("Timeout; to wait a file creation.")}\r\n`)
     }else if(!fs.existsSync(lockFilePath)){
       setTimeout(() => {
-        process.stdout.write(`${chalk.bold.blue("Obfuscator wait:")} ${chalk.cyan("Wait for file creation.")}\r\n`)
+        process.stdout.write(`${chalk.bold.blue("Obfuscator wait:")} ${chalk.cyan("Wait for file creation: Count")} ${chalk.red((optionsOverride.retryCount - waitCount).toString() + "/" + optionsOverride.retryCount.toString())}\r\n`)
         waitForObfuscation()
       }, 1000)
     }else{
@@ -302,20 +326,22 @@ export const applyObfuscated = () => {
  */
 
 const getRandomName = (className, length, retryCount) => {
-  const chars = '0123456789abcdefghijklmnopqrstuv'.split('')
+  const base32 = '0123456789abcdefghijklmnopqrstuv'.split('')
 
   const getRandom = () => {
-    const hashed = hashSync(className + "\t" + seed, {
-      encoding: 'hex',
-      algorithm: 'sha512',
-    })
+    const preEncode = new TextEncoder().encode(
+      className + "\t" + seed
+    )
+    const postEncode = sha3_512(preEncode)
+    const hashed = Buffer.from(postEncode).toString("hex")
+
     const randomString = (
       '1' + hashed.split('').map(
         c => ('0000' + parseInt('0x' + c).toString(2)).slice(-4)
       ).join('') + '11'
     )
     .match(/.{5}/g)
-    .map(b => chars[parseInt(b, 2)]).join('')
+    .map(b => base32[parseInt(b, 2)]).join('')
     .substring(0, length)
 
     return randomString
@@ -372,7 +398,7 @@ const writeJsonToFile = (data, filePath, format = true, fresh = false, startOver
 }
 
 
-const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPath, keepData, applyClassNameWithoutDot) => {
+const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPath, keepData, applyClassNameWithoutDot, fileIgnore) => {
   const jsonData = {}
   fs.readdirSync(jsonDataPath).forEach(file => {
     const filePath = path.join(jsonDataPath, file)
@@ -382,6 +408,7 @@ const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPa
 
   const replaceJsonKeysInFile = async filePath => {
     const fileExt = path.extname(filePath).toLowerCase()
+    const fileName = path.basename(filePath)
 
     if(fs.statSync(filePath).isDirectory()){
       fs.readdirSync(filePath).forEach(subFilePath => {
@@ -389,9 +416,11 @@ const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPa
       })
     }else if(outputExcludes.includes(fileExt)){
       process.stdout.write(`${chalk.bold.blue("Obfuscator ignore:")} ${chalk.cyan(filePath)}\r\n`)
+    }else if(fileIgnore.includes(fileName)){
+      process.stdout.write(`${chalk.bold.blue("Obfuscator ignore:")} ${chalk.cyan(filePath)}\r\n`)
     }else if(!outputExcludes.includes(path.basename(filePath)) && extensions.html.includes(fileExt)){
       //replace html
-      process.stdout.write(`${chalk.green("\u{2b25}")} ${chalk.bold.blue("Target:")} ${chalk.yellow(filePath)}\r\n`)
+      process.stdout.write(`${chalk.magenta("\u{2b25}")} ${chalk.bold.blue("Target:")} ${chalk.yellow(filePath)}\r\n`)
 
       let fileContent = fs.readFileSync(filePath, 'utf-8')
       let parsed = htmlParser(fileContent)
@@ -418,7 +447,7 @@ const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPa
       fs.writeFileSync(filePath, transformed)
     }else if(!outputExcludes.includes(path.basename(filePath)) && extensions.javascript.includes(fileExt)){
       //replace javascript
-      process.stdout.write(`${chalk.green("\u{2b25}")} ${chalk.bold.blue("Target:")} ${chalk.yellow(filePath)}\r\n`)
+      process.stdout.write(`${chalk.magenta("\u{2b25}")} ${chalk.bold.blue("Target:")} ${chalk.yellow(filePath)}\r\n`)
 
       let fileContent = fs.readFileSync(filePath, 'utf-8')
       const ast = espree.parse(fileContent, {
@@ -477,7 +506,7 @@ const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPa
       fs.writeFileSync(filePath, minified.code)
     }else if(!outputExcludes.includes(path.basename(filePath)) && extensions.php.includes(fileExt)){
       //replace php
-      process.stdout.write(`${chalk.green("\u{2b25}")} ${chalk.bold.blue("Target:")} ${chalk.yellow(filePath)}\r\n`)
+      process.stdout.write(`${chalk.magenta("\u{2b25}")} ${chalk.bold.blue("Target:")} ${chalk.yellow(filePath)}\r\n`)
 
       let fileContent = fs.readFileSync(filePath, 'utf-8')
 
@@ -492,6 +521,12 @@ const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPa
 
         regenerate = gyros(regenerate.toString(), {parseMode: 'code'}, (node, {update}) => {
           if(/(string|inline)/.test(node.kind)){
+            readline.moveCursor(process.stdout, -process.stdout.columns, 0)
+            readline.clearLine(process.stdout, 0)
+            let stdoutStr = ` ${chalk.red("\u{2600}")}  ${chalk.gray(node.raw.substr(0, 32))}`
+            stdoutStr = stdoutStr.slice(0, process.stdout.columns)
+            process.stdout.write(stdoutStr)
+
             let escapeRegex = new RegExp(`(^|[\\s"'\\\`])${escapeRegExp(key)}([\\s"'\\\`]|$)`, 'g')
             if(escapeRegex.test(node.raw)){
               update(node.raw.replace(escapeRegex, "$1" + jsonData[key] + "$2"))
@@ -551,11 +586,18 @@ const copyDirectory = (source, destination, copyHiddenFiles = false) => {
 }
 
 
+let dumpedFiles = []
 const getFileCount = (directoryPath, extensions, expludePathsOrFiles = []) => {
   let count = 0
   const files = fs.readdirSync(directoryPath)
   files.forEach(file => {
     const filePath = path.join(directoryPath, file)
+
+    if(dumpedFiles.filter(arr => arr === filePath).length === 0){
+      process.stdout.write(` ${chalk.green("\u{2709}")}  ${chalk.gray(filePath)}\r\n`)
+      dumpedFiles.push(filePath)
+    }
+
     const isExcluded = expludePathsOrFiles.some(excludePathOrFile => {
       return (
         excludePathOrFile === file ||
