@@ -1,7 +1,7 @@
 {
   "name": "postcss-uuid-obfuscator",
   "type": "module",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/hadukinei/postcss-uuid-obfuscator.git"
@@ -40,5 +40,8 @@
     "postcss": "^8.5.4",
     "terser": "^5.40.0",
     "uuid": "^10.0.0"
+  },
+  "volta": {
+    "node": "24.1.0"
   }
 }

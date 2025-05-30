@@ -143,21 +143,52 @@ const task_html = done => {
 
 // Javascript <= TypeScript
 const task_js = async done => {
-  const files = await glob('src/js/**/!(_)*.{js,ts}', {
-    ignore: 'node_modules/**',
-  })
+  let promises = []
+  let files = await glob('./html/src/js/**/*.ts', {ignore: 'node_modules/**'})
 
-  await esbuild.build({
-    entryPoints: files,
-    outdir: 'dist/js',
-    target: ['es6'],
-    bundle: true,
-    minify: true,
-    sourcemap: true,
-    logLevel: 'info',
-  })
+  if(!files){
+    done();
+  }else{
+    const tsOption = {
+      target: 'es6',
+      module: 'commonjs',
+      explainFiles: true,
+      noImplicitAny: false,
+      exclude: ['node_modules'],
+    }
 
-  done()
+    files.forEach(file => {
+      promises.push(new Promise(resolve => {
+        fs.readFile(file)
+        .then(res => Buffer.from(res).toString("utf8").replace(/^import\s.*?$/gm, ''))
+        .then(body => {
+          const oUrl = file.replace(/^src\\js\\/, '.\\dist\\js\\').replace(/\.ts$/, '.js').replace(/\\/g, '/')
+          const jsText = ts.transpile(body, tsOption)
+          return [oUrl, jsText]
+        })
+        .then(arr => {
+          fs.ensureFile(arr[0], () => {
+            fs.writeFile(arr[0], arr[1])
+            .then(() => {
+              resolve()
+            })
+            .catch(e => {
+              console.log(e)
+            })
+          })
+          return 0
+        })
+        .catch(e => {
+          console.log(e)
+        })
+      }))
+    })
+
+    Promise.allSettled(promises)
+    .finally(() => {
+      done()
+    })
+  }
 }
 
 
