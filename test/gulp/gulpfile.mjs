@@ -37,7 +37,7 @@ import { cleanObfuscator, obfuscator, applyObfuscated } from 'postcss-uuid-obfus
 //import { cleanObfuscator, obfuscator, applyObfuscated } from '../../index.mjs'
 
 // TypeScript
-import * as esbuild from 'esbuild'
+import ts from 'typescript'
 
 // Live server
 import browserSync from 'browser-sync'
@@ -144,7 +144,7 @@ const task_html = done => {
 // Javascript <= TypeScript
 const task_js = async done => {
   let promises = []
-  let files = await glob('./html/src/js/**/*.ts', {ignore: 'node_modules/**'})
+  let files = await glob('./src/js/**/*.ts', {ignore: 'node_modules/**'})
 
   if(!files){
     done();
@@ -164,11 +164,14 @@ const task_js = async done => {
         .then(body => {
           const oUrl = file.replace(/^src\\js\\/, '.\\dist\\js\\').replace(/\.ts$/, '.js').replace(/\\/g, '/')
           const jsText = ts.transpile(body, tsOption)
-          return [oUrl, jsText]
+          return {
+            oUrl: oUrl,
+            jsText: jsText,
+          }
         })
-        .then(arr => {
-          fs.ensureFile(arr[0], () => {
-            fs.writeFile(arr[0], arr[1])
+        .then(data => {
+          fs.ensureFile(data.oUrl, () => {
+            fs.writeFile(data.oUrl, data.jsText)
             .then(() => {
               resolve()
             })

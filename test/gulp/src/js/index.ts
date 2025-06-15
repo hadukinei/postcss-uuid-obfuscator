@@ -7,6 +7,7 @@ import Scrollbar from 'smooth-scrollbar'
     /**
      * smooth scrollbar
      */
+    Scrollbar.use((window as any).OverscrollPlugin)
     Scrollbar.initAll({
       damping: 0.1,
     })

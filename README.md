@@ -1,19 +1,32 @@
 # PostCSS UUID Obfuscator
 
-## 更新点: v1.2.1
+|言語|Language|
+|---|---|
+|[<img width="24" height="24" align="left" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵"> 日本語](README.md)|[<img width="24" height="24" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸"> English](README_EN.md)|
+<style>.x--hr{height:1.5em}</style>
+
+## 更新点: v1.2
 
 - 依存パッケージのバージョンアップ
 - 無視したいファイルを設定するfileIgnoreプロパティの追加
 - Node.js@24.0.0以降でエラーになっていたため、ハッシュ化に用いるパッケージを[hasha]から[@noble/hashes]に変更
+- README.mdを日本語と英語で分離
 
 ---
 
 この[PostCSS]プラグインはクラス名を[UUID]などでハッシュ化します。
+
 そしてハッシュ化したクラス名を、HTMLファイルのclass属性・JavascriptやPHPの文字列などに対して置換処理を適用します。
+
 ハッシュ化する範囲を限定しているため変数名を置換することはありません。
 
+<div class="x--hr"></div>
+
 基本的には[gulp-postcss]によって読み込まれ、[gulp] (gulpfile.mjs) パイプラインでの動作を想定していますがJS-APIでのPostCSSでも動作します。
+
 このプラグイン作成には[postcss-obfuscator]から多くの影響を受けています。
+
+<div class="x--hr"></div>
 
 PHPでの処理については[注釈2](#php処理について)を参照してください。
 
@@ -24,13 +37,13 @@ PHPでの処理については[注釈2](#php処理について)を参照して�
 [postcss-obfuscator]: https://github.com/n4j1Br4ch1D/postcss-obfuscator
 [@noble/hashes]: https://github.com/paulmillr/noble-hashes
 
+<div class="x--hr"></div>
 
----
 
 ## 目次
 
 - [PostCSS UUID Obfuscator](#postcss-uuid-obfuscator)
-  - [更新点: v1.2.1](#更新点-v121)
+  - [更新点: v1.2](#更新点-v12)
   - [目次](#目次)
   - [特徴](#特徴)
     - [生成アルゴリズム](#生成アルゴリズム)
@@ -74,19 +87,25 @@ PHPでの処理については[注釈2](#php処理について)を参照して�
       - [ハッシュ化したクラス名](#ハッシュ化したクラス名)
       - [PHP処理について](#php処理について)
 
+<div class="x--hr"></div>
 
----
 
 ## 特徴
 
 元となったpostcss-obfuscatorはとても素晴らしいパッケージですが、いくつかの重大な問題に直面したためにPostCSS UUID Obfuscatorを作成しました。
+
+<div class="x--hr"></div>
 
 
 ### 生成アルゴリズム
 
 postcss-obfuscatorでは新しいクラス名を得るために`Math.random()`を使っています。
 
+<div class="x--hr"></div>
+
 乱数衝突の観点からこれは好ましいものではありませんし、実際に衝突が発生した場合の特別な処理が行われているとは思えませんでした。
+
+<div class="x--hr"></div>
 
 
 ### 文字置換の過剰と過小
@@ -102,15 +121,27 @@ postcss-obfuscatorでは新しいクラス名を得るために`Math.random()`�
 
 CSSの文法からクラス名となるセレクタを抽出し、一括して置換処理を行います。
 
+<div class="x--hr"></div>
+
 上例のCSSがあったなら、下例のクラス名に一致した文字を**全て**変換するでしょう。
+
+1. 例1
 
 ```html
 <hr class="hoge fuga" />
 ```
 
+<div class="x--hr"></div>
+
+2. 例2
+
 ```javascript
 document.body.classList.add("hoge")
 ```
+
+<div class="x--hr"></div>
+
+3. 例3
 
 ```html
 <div>The "hoge" word should not be changed!</div>
@@ -118,19 +149,28 @@ document.body.classList.add("hoge")
 
 3例目。クラス名ではない文字列も、正規表現パターンにマッチしてしまった場合には変換されてしまいますがこの動作は望みません。
 
+<div class="x--hr"></div>
+
+4. 例4
+
 ```javascript
 document.querySelector('.hoge')?.classList.length
 ```
 
-そして上例もまた機能しません。
+そして例4もまた機能しません。
+
+<div class="x--hr"></div>
 
 querySelector, querySelectorAll, closest関数などではクラス名の前にピリオドを使うのに対して、この書式はpostcss-obfuscatorの正規表現パターンから漏れ落ちてしまいます。
 
+<div class="x--hr"></div>
+
 このPostCSS UUID Obfuscatorでは、HTMLとJavascriptの文法解析を行ってから処理します。
+
 HTMLではclass属性だけを置換対象とします。
 
+<div class="x--hr"></div>
 
----
 
 ## インストール
 
@@ -138,12 +178,14 @@ HTMLではclass属性だけを置換対象とします。
 npm install postcss-uuid-obfuscator
 ```
 
+<div class="x--hr"></div>
 
----
 
 ## gulpでの使い方
 
 動作サンプルをtest/gulpフォルダに用意してあります。
+
+<div class="x--hr"></div>
 
 
 ### package.json
@@ -160,22 +202,28 @@ npm install postcss-uuid-obfuscator
 
 上記のscriptsがpackage.jsonに用意されているものとします。
 
+<div class="x--hr"></div>
+
 
 ### npmパッケージのインストール
 
 ```
-npm install autoprefixer dotenv fs-extra gulp gulp-connect-php gulp-if gulp-postcss gulp-rename gulp-sass postcss-csso postcss-uuid-obfuscator sass tailwindcss
+npm install autoprefixer dotenv fs-extra gulp gulp-connect-php gulp-if gulp-postcss gulp-rename gulp-sass postcss-csso postcss-uuid-obfuscator sass tailwindcss@3
 ```
 
 上記のnpmパッケージがインストールされているものとします。
 
 SCSS構文で、TailwindCSS・autoprefixer・postcss-cssoを併用するサンプルです。
 
+> Version 4以降のTailwindCSSはプラグインとしての利用が難しくなったためにアップグレードしていません
+
 `npx tailwindcss init`の初期化処理は完了しているものとします。
 
 [TailwindCSS]: https://tailwindcss.com/
 [autoprefixer]: https://github.com/postcss/autoprefixer
 [postcss-csso]: https://github.com/lahmatiy/postcss-csso
+
+<div class="x--hr"></div>
 
 
 ### パッケージの読み込み
@@ -202,7 +250,9 @@ import { cleanObfuscator, obfuscator, applyObfuscated } from 'postcss-uuid-obfus
 ESModule形式のみ。
 CommonJS (require関数) による動作は保証しません。
 
-PostCSS UUID ObfuscatorからはcleanObfuscator・obfuscator・applyObfuscatedを読み込んでください。
+PostCSS UUID Obfuscatorからは`cleanObfuscator`・`obfuscator`・`applyObfuscated`を読み込んでください。
+
+<div class="x--hr"></div>
 
 
 ### 変数
@@ -220,9 +270,12 @@ const jsonsPath = 'css-obfuscator'
 
 上例では `process.title` を使っていますが、環境変数を使うなど方法に制限はありません。
 
+<div class="x--hr"></div>
 
 2. ハッシュ化処理の結果をJSON形式で保存します。
 そのためのフォルダ名を変数として定義します。
+
+<div class="x--hr"></div>
 
 
 ### メインタスク
@@ -256,9 +309,14 @@ const task_css = done => {
 ```
 
 PostCSSの処理を始める前に、`cleanObfuscator(jsonsPath)`で初期化処理を実行します。
+
 具体的には（前回に実行した）ハッシュ化処理の結果をJSONファイルを削除します。
 
+<div class="x--hr"></div>
+
 `obfuscator({})`のオプション引数について詳細は後述しますが、ここで重要なのは1点。
+
+<div class="x--hr"></div>
 
 
 #### targetPathプロパティ
@@ -266,6 +324,8 @@ PostCSSの処理を始める前に、`cleanObfuscator(jsonsPath)`で初期化処
 `targetPath`にgulpの出力先フォルダを指定してください。
 
 上例ではsrcフォルダの中身を変換してdistフォルダに出力し、その後でdistフォルダにあるファイルに対して文字置換を行います。
+
+<div class="x--hr"></div>
 
 
 ### npm.scriptsへのエクスポート
@@ -288,10 +348,16 @@ export const dev = series(
 ```
 
 `applyObfuscated()`関数について述べる前に、タスクの呼び出し順を指定します。
+
 CSSの処理は必ずHTMLやJavascriptの処理よりも後に並び替えてください。
 
+<div class="x--hr"></div>
+
 クラス名のハッシュ化処理ではCSSで処理して得た結果を利用して、HTMLやJavascriptの文字置換を行います。
+
 この順序が前後すると正常な動作は期待できません。
+
+<div class="x--hr"></div>
 
 
 ### HTML,Javascriptファイルへの適用タスク
@@ -305,7 +371,10 @@ const task_applyObfuscate = done => {
 ```
 
 CSS処理が完了した後で、`applyObfuscated()`のタスクを呼び出します。
+
 ここでHTML・Javascriptの文字置換処理を行います。
+
+<div class="x--hr"></div>
 
 
 ### 中間ファイルの削除タスク
@@ -335,12 +404,14 @@ const task_clean = done => {
 
 それらを一掃するためのタスクも用意しておくと便利になることでしょう。
 
+<div class="x--hr"></div>
 
----
 
 ## JS-APIでの使い方
 
 動作サンプルをtest/postcssフォルダに用意してあります。
+
+<div class="x--hr"></div>
 
 
 ### package.json
@@ -361,9 +432,13 @@ const task_clean = done => {
 
 上記のscriptsがpackage.jsonに用意されているものとします。
 
+<div class="x--hr"></div>
+
 ほとんどがタスクの定義のためのscriptで、実際に使うのはclean・build・devの3つだけですのでgulpとやっていることは大差ありません。
 
 タスクの順番は、必ずCSS処理を最後にしてください。
+
+<div class="x--hr"></div>
 
 
 ### npm パッケージのインストール
@@ -377,6 +452,8 @@ npm install autoprefixer dotenv fs-extra glob npm-run-all2 path postcss postcss-
 SCSS構文で、TailwindCSS・autoprefixer・postcss-cssoを併用するサンプルです。
 
 `npx tailwindcss init`の初期化処理は完了しているものとします。
+
+<div class="x--hr"></div>
 
 
 ### パッケージ の読み込み
@@ -400,9 +477,14 @@ import { cleanObfuscator, obfuscator, applyObfuscated } from 'postcss-uuid-obfus
 ```
 
 ESModule形式のみ。
+
 CommonJS (require関数) による動作は保証しません。
 
+<div class="x--hr"></div>
+
 PostCSS UUID ObfuscatorからはcleanObfuscator・obfuscator・applyObfuscatedを読み込んでください。
+
+<div class="x--hr"></div>
 
 
 ### 変 数
@@ -420,17 +502,26 @@ let taskFiles = 0
 ```
 
 1. オートリロードを想定している開発モードではハッシュ化処理に時間がかかって邪魔になります。
+
 処理の可否を決定するための変数を定義しておきます。
+
+<div class="x--hr"></div>
 
 上例では `process.title` を使っていますが、環境変数を使うなど方法に制限はありません。
 
+<div class="x--hr"></div>
 
 2. ハッシュ化処理の結果をJSON形式で保存します。
+
 そのためのフォルダ名を変数として定義します。
 
+<div class="x--hr"></div>
 
 3. ファイルごとにPostCSSをループさせています。
+
 処理済みファイルの数をカウントし、次の処理へ進んでいいかの条件分岐に使います。
+
+<div class="x--hr"></div>
 
 
 ### メイン タスク
@@ -494,35 +585,48 @@ task()
 ```
 
 1. PostCSSの処理を始める前に、`cleanObfuscator(jsonsPath)`で初期化処理を実行します。
+
 具体的には（前回に実行した）ハッシュ化処理の結果をJSONファイルを削除します。
 
+<div class="x--hr"></div>
+
 `obfuscator({})`のオプション引数について詳細は後述しますが、ここで重要なのは2点。
+
+<div class="x--hr"></div>
 
 
 #### targetPath プロパティ
 
 `targetPath`にbuild-css.mjsの出力先フォルダを指定してください。
 
-上例ではsrcフォルダの中身を変換してdistフォルダに出力し、その後でdistフォルダにあるファイルに対して文字置換を行います。
+<div class="x--hr"></div>
+
+2. 上例ではsrcフォルダの中身を変換してdistフォルダに出力し、その後でdistフォルダにあるファイルに対して文字置換を行います。
+
+<div class="x--hr"></div>
 
 
 #### エントリーポイントとなるファイルは必ず1個
 
 開発モード (`npm run dev`) でPostCSS UUID Obfuscatorを無効化している間は問題ありません。
+
 しかしビルドモード (`npm run build`) でこのパッケージを有効にした場合、最後に処理したSCSSファイルが以前のハッシュ化処理を上書きしてしまいます。
 
 必ず'index.scss'など、エントリポイントとなるファイルは1つだけにしてください。
 
+<div class="x--hr"></div>
 
 3. CSS処理が完了した後で、`applyObfuscated()`のタスクを呼び出します。
+
 ここでHTML・Javascriptの文字置換処理を行います。
 
+<div class="x--hr"></div>
 
----
 
 ## API
 
 cleanObfuscatorとapplyObfuscatedには設定すべきオプション引数は存在しません。
+
 obfuscatorの設定で全ては完結しています。
 
 ```javascript
@@ -548,6 +652,8 @@ const options = {
 obfuscator(options)
 ```
 
+<div class="x--hr"></div>
+
 
 ### options.enable
 
@@ -555,53 +661,75 @@ obfuscator(options)
 
 初期値: true (boolean)
 
+<div class="x--hr"></div>
+
 
 ### options.length
 
-ハッシュ化クラス名の文字数。[注釈1](#ハッシュ化したクラス名)
+ハッシュ化クラス名の文字数。([注釈1](#ハッシュ化したクラス名))
 
 初期値: 5 (number)
+
+<div class="x--hr"></div>
 
 
 ### options.retryCount
 
-乱数衝突が発生した場合の再生成を行う回数上限。[注釈1](#ハッシュ化したクラス名)
+乱数衝突が発生した場合の再生成を行う回数上限。([注釈1](#ハッシュ化したクラス名))
 
 初期値: 25 (number)
+
+<div class="x--hr"></div>
 
 
 ### options.classPrefix
 
-クラス名の接頭語。[注釈1](#ハッシュ化したクラス名)
+クラス名の接頭語。([注釈1](#ハッシュ化したクラス名))
 
 初期値: 'x--' (string)
+
+<div class="x--hr"></div>
 
 
 ### options.classSuffix
 
-クラス名の接尾語。[注釈1](#ハッシュ化したクラス名)
+クラス名の接尾語。([注釈1](#ハッシュ化したクラス名))
 
 初期値: '' (string)
+
+<div class="x--hr"></div>
 
 
 ### options.classIgnore
 
 ハッシュ化処理に含めないクラス名。
 
-初期値: [] (string[])
+初期値: [] (Array &lt;string&gt;)
+
+<div class="x--hr"></div>
 
 別のプラグインが指定しているなど、特定のクラス名でなければ動作できない場合に使います。
+
 指定するには`['scrollbar-track', 'scrollbar-thumb']`のように記述して、先頭のピリオドを含めないようにしてください。
+
+<div class="x--hr"></div>
 
 
 ### options.fileIgnore
 
 ハッシュ化処理に含めないファイル名。
 
-初期値: [] (string[])
+options.outputExcludesは拡張子単位での除外指定を行いますが、このoptions.fileIgnoreはファイル名での指定を行います。
+
+初期値: [] (Array &lt;string&gt;)
+
+<div class="x--hr"></div>
 
 保存したプラグインファイルなど、ハッシュ化処理に巻き込みたくない場合に使います。
+
 指定するには`['plugins.min.js']`のようにファイル名のみで記述して、フォルダ名を含めないようにしてください。
+
+<div class="x--hr"></div>
 
 
 ### options.jsonsPath
@@ -610,53 +738,87 @@ obfuscator(options)
 
 初期値: 'css-obfuscator' (string)
 
+<div class="x--hr"></div>
+
 
 ### options.targetPath
 
-タスクランナーなどによってHTML・CSS・Javascriptなど各ファイルを出力するフォルダの名前を指定します。
+タスクランナーなどによってHTML・CSS・Javascriptなど各ファイルを**出力するフォルダの名前**を指定します。
+
 ファイルの出力が終わった後で、このフォルダに格納されるファイルの文字置換を行います。
 
-変換元となるフォルダを指定してしまった場合、最悪の可能性としては元ファイルを破壊してしまうため注意してください。
+**変換元となるフォルダ名**を指定してしまった場合、最悪の可能性としては元ファイルを破壊してしまうため注意してください。
 
 初期値: 'out' (string)
+
+<div class="x--hr"></div>
 
 
 ### options.extensions
 
 変換対象のファイル拡張子を定義しています。
 
-初期値: {html: ['.html', '.htm'], javascript: ['.js'], php: ['.php']} [注釈2](#php処理について)
-
-
 > 特別な理由がない場合は設定変更しないことを強く推奨します。
 
+初期値: {html: ['.html', '.htm'], javascript: ['.js'], php: ['.php']} ([注釈2](#php処理について))
+
+```typescript
+interface T {
+  html: Array <string>,
+  javascript: Array <string>,
+  php: Array <string>,
+}
+```
+
+<div class="x--hr"></div>
+
 現段階ではHTMLパーサの[node-html-parser]と、Javascriptパーサの[espree]、そしてPHPパーサの[gyros]のみ実装しています。
-JSXやTypeScriptなど対象外の言語を読み込ませるために`javascript: ['.ts']`のような設定へ変更したとしても動作しません。
+
+JSXやTypeScriptなど対象外の言語を読み込ませるために`{html: ['.xml'], javascript: ['.ts', '.jsx']}`のような設定へ変更したとしても動作しません。
 
 [node-html-parser]: https://github.com/taoqf/node-html-parser
 [espree]: https://github.com/eslint/espree
 [gyros]: https://github.com/loilo/gyros
+
+<div class="x--hr"></div>
 
 
 ### options.outputExcludes
 
 変換対象にしないファイル拡張子を定義します。
 
-初期値: ['.webp', '.png', '.jpg', '.jpeg', '.gif', '.ico', '.map', '.webmanifest', '.mp4', '.webm', '.ogg'] (string[])
+options.fileIgnoreはファイル名での指定でしたが、options.outputExcludesは拡張子単位での除外指定を行います。
+
+初期値: ['.webp', '.png', '.jpg', '.jpeg', '.gif', '.ico', '.map', '.webmanifest', '.mp4', '.webm', '.ogg'] (Array &lt;string&gt;)
+
+<div class="x--hr"></div>
 
 内部的には全ファイルを走査しているため、その対象から外す処理が行われます。
+
 `['.js', '.html']`のように、ピリオド付きのファイル拡張子を指定してください。
+
+<div class="x--hr"></div>
 
 
 ### options.scriptType
 
 Javascriptのモジュールタイプを指定する。
 
-初期値: "script" (string)
+初期値: 'script' (string)
 
-ESM形式の場合は変更する必要はありません。
+<div class="x--hr"></div>
 
-しかしモジュール形式（.mjsファイル）の場合は "module" と、CommonJS形式（.cjsファイル）の場合は "commonjs" と指定してください。
+ESModule形式の場合は変更する必要はありません。
+
+基本的にはブラウザ上で動作するJavascriptを対象とするため、TypeScriptを使用する場合も含めてこの値を変更する必要性は薄いでしょう。
+
+<div class="x--hr"></div>
+
+しかしモジュール形式（.mjsファイル）をご利用の場合は 'module' と、CommonJS形式（.cjsファイル）の場合は 'commonjs' と指定してください。
+
+異なるモジュールタイプの併用は禁忌です。
+
+<div class="x--hr"></div>
 
 
 ### options.keepData
@@ -665,6 +827,8 @@ ESM形式の場合は変更する必要はありません。
 
 初期値: true (boolean)
 
+<div class="x--hr"></div>
+
 
 ### options.applyClassNameWithoutDot
 
@@ -672,14 +836,23 @@ Javascript・PHPでの文字置換処理において、`.c-className`のよう�
 
 初期値: false (boolean)
 
+<div class="x--hr"></div>
 
 デフォルトではfalseになっているため、ピリオド付きのクラス名にしか適用されません。
+
 `document.querySelector()`・`document.querySelectorAll()`・`document.closest()`関数で使いやすい上に、ピリオドを必ず伴うところからクラス名を置換しようとしていることが明確です。
+
+<div class="x--hr"></div>
 
 設定をtrueに変更することで、`document.getElementsByClassName()`や`document.body.classList.add()`などのピリオドを付けずにクラス名を扱う場面でも使えるようになります。
 
+<div class="x--hr"></div>
+
 置換規則を「クラス名の前後にクォート記号・空白記号・文頭・文末のいずれかが存在すること」としていますので「何が文字置換されるか」の推測はある程度予見可能ですが意図せず条件に当てはまって過剰置換を行う危険性もあります。
+
 特に「dark」「red」などの単純な命名を行った場合は非常に危険ですのでご注意ください。
+
+<div class="x--hr"></div>
 
 
 ### options.preRun
@@ -688,12 +861,15 @@ obfuscator関数 (PostCSS内部で実行される) が実行される直前に�
 
 初期値: () => Promise.resolve() (Promise.<Object>)
 
+<div class="x--hr"></div>
 
 例えば500ミリ秒のウェイトを挟みたい場合は次のように記述すれば可能です。
 
 ```javascript
 preRun: () => new Promise(resolve => setTimeout(resolve, 500)),
 ```
+
+<div class="x--hr"></div>
 
 
 ### options.callBack
@@ -702,6 +878,7 @@ cleanObfuscator関数 (HTMLやJavascriptファイルの書き換え) が実行�
 
 初期値: () => {} (function)
 
+<div class="x--hr"></div>
 
 例えば処理完了のメッセージを表示したい場合は次のように記述すれば可能です。
 
@@ -709,56 +886,80 @@ cleanObfuscator関数 (HTMLやJavascriptファイルの書き換え) が実行�
 callBack: () => {console.log('obfuscated!')}
 ```
 
+<div class="x--hr"></div>
 
----
 
 #### ハッシュ化したクラス名
 
 新しいクラス名の生成方法は、単純な文字列のハッシュ化処理だけではありません。
 
-+ [UUID] v4 (ランダムな値) をシード値として生成し、既に生成されている場合は生成し直す。
-+ 変換したいクラス名とシード値を結合し、[@noble/hashes]のSHA512形式でハッシュ化し、2進数に変換し、先頭に'111'を追加して、base32形式で出力する。
-+ options.lengthの文字数に従って文字列を切り詰める。
-+ 変換済みのクラス名と乱数衝突を起こしていた場合は1番目に戻る
+1. [UUID] v4 (ランダムな値) をシード値として生成し、既に生成されている場合は生成し直す。
+2. 変換したいクラス名とシード値を結合し、[@noble/hashes]のSHA512形式でハッシュ化し、2進数に変換し、先頭に'111'を追加して、base32形式で出力する。
+3. options.lengthの文字数に従って文字列を切り詰める。
+4. 変換済みのクラス名と乱数衝突を起こしていた場合は1番目に戻る
    > ただしoptions.retryCountで指定した再探索回数の上限に到達してしまった場合、警告文を表示して次に進みます。
-+ options.prefixとoptions.suffixを変換後の文字列の前後に付け足す。
+5. options.prefixとoptions.suffixを変換後の文字列の前後に付け足す。
+
+<div class="x--hr"></div>
 
 特に5番目の手順を行っているため、ハッシュ化されたクラス名の文字長はoptions.lenthと必ず一致するとは限りません。
 
 [hasha]: https://github.com/sindresorhus/hasha
 
----
+<div class="x--hr"></div>
+
 
 #### PHP処理について
 
 同梱したtest/gulp・test/postcssでは、.envファイルのIS_PHPを true に設定変更するとPHPでの動作を確認できます。
 
+<div class="x--hr"></div>
+
 PHPでのハッシュ化処理を有効にするためには applyClassNameWithoutDot を true にする必要があります。
+
 これはPHPパーサがHTML構造を理解できないため、まとめてinline型として扱うためです。
+
 一方でPHPコードについては文法解析を行いますので、適切な文字列に対して置換処理が行われます。
+
+1. 例1
 
 ```html
 <div class="absolute">This is a "absolute" text.</div>
 ```
 
-上例ではクラス名と文中、両方の「absolute」に対して文字置換処理が行われます。
+例1ではクラス名と文中、両方の「absolute」に対して文字置換処理が行われます。
+
+<div class="x--hr"></div>
+
+2. 例2
 
 ```php
 $absolute = "absolute";
 ```
 
-上例では変数名に対しては置換処理を行わず、文字列型の右辺のみが処理対象となります。
+例2では変数名に対しては置換処理を行わず、文字列型の右辺のみが処理対象となります。
+
+<div class="x--hr"></div>
+
+3. 例3
 
 ```php
 echo "<div class='absolute'>" . "abso" . "lute" . "</div>";
 ```
 
-上例のように文字を分割してしまうと検知できません。
+例3のように文字を分割してしまうと検知できません。
+
+ハッシュ化は行われません。
+
+<div class="x--hr"></div>
+
+4. 例4
 
 ```php
 $absolute = "abso" . "lute";
 echo "<div class='absolute'>This is {$absolute} absolute text.</div>";
 ```
 
-上例の場合、1行目では検知されないように回避しています。
+例4の場合、1行目では検知されないように回避しています。
+
 2行目の波括弧による変数展開ではそのまま維持されるため、クラス名と文字列としての absolute は置換される一方で、$absolute はそのまま表示されます。
