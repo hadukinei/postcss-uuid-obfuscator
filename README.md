@@ -3,14 +3,14 @@
 |言語|Language|
 |---|---|
 |[<img width="24" height="24" align="left" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵"> 日本語](README.md)|[<img width="24" height="24" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸"> English](README_EN.md)|
-<style>.x--hr{height:1.5em}</style>
+<!-- <style>.x--hr{height:1.5em}</style> -->
 
-## 更新点: v1.2
+## 更新点: v1.2.4
 
-- 依存パッケージのバージョンアップ
-- 無視したいファイルを設定するfileIgnoreプロパティの追加
-- Node.js@24.0.0以降でエラーになっていたため、ハッシュ化に用いるパッケージを[hasha]から[@noble/hashes]に変更
-- README.mdを日本語と英語で分離
+- options.classPrefixとoptions.classSuffixの処理を修正
+- リトライ回数を60回（約60秒）に変更
+- リトライの条件を修正
+- TailwindCSS v3に関する記述の更新と追加
 
 ---
 
@@ -43,7 +43,7 @@ PHPでの処理については[注釈2](#php処理について)を参照して�
 ## 目次
 
 - [PostCSS UUID Obfuscator](#postcss-uuid-obfuscator)
-  - [更新点: v1.2](#更新点-v12)
+  - [更新点: v1.2.4](#更新点-v124)
   - [目次](#目次)
   - [特徴](#特徴)
     - [生成アルゴリズム](#生成アルゴリズム)
@@ -444,12 +444,14 @@ const task_clean = done => {
 ### npm パッケージのインストール
 
 ```
-npm install autoprefixer dotenv fs-extra glob npm-run-all2 path postcss postcss-csso postcss-uuid-obfuscator sass tailwindcss
+npm install autoprefixer dotenv fs-extra glob npm-run-all2 path postcss postcss-csso postcss-uuid-obfuscator sass tailwindcss@3
 ```
 
 上記のnpmパッケージがインストールされているものとします。
 
 SCSS構文で、TailwindCSS・autoprefixer・postcss-cssoを併用するサンプルです。
+
+> Version 4以降のTailwindCSSはプラグインとしての利用が難しくなったためにアップグレードしていません
 
 `npx tailwindcss init`の初期化処理は完了しているものとします。
 

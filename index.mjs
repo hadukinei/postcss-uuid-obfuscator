@@ -47,7 +47,7 @@ let tmpClassList = []
 const defaultOptions = {
   enable: true,
   length: 5,
-  retryCount: 25,
+  retryCount: 60,
   classPrefix: 'x--',
   classSuffix: '',
   classIgnore: [],
@@ -185,7 +185,12 @@ export const obfuscator = (options = {}) => {
                 throw new Error('Panic for className generating.')
               }
 
-              newClassName = `.${classPrefix}${newClassName}${classSuffix}`
+              if(!classIgnore.includes(className)){
+                newClassName = `.${classPrefix}${newClassName}${classSuffix}`
+              }else{
+                newClassName = `.${newClassName}`
+              }
+
               let validCssClassName = '.' + escapeClassName
               let octalValidCssClassName = '.' + octalizeClassName(oldClassName.slice(1))
 
@@ -357,7 +362,7 @@ const getRandomName = (className, length, retryCount) => {
     }else{
       break
     }
-  }while(!hash && count < retryCount)
+  }while(!hash && count <= retryCount)
 
   if(hash === ''){
     process.stdout.write(`${chalk.bold.blue("Obfuscator error:")} ${chalk.red("Cannot found a unique hashed className.")}\r\n`)

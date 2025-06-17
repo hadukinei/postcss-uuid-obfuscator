@@ -3,14 +3,14 @@
 |言語|Language|
 |---|---|
 |[<img width="24" height="24" align="left" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵"> 日本語](README.md)|[<img width="24" height="24" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸"> English](README_EN.md)|
-<style>.x--hr{height:1.5em}</style>
+<!-- <style>.x--hr{height:1.5em}</style> -->
 
-## Revision: in v1.2
+## Revision: in v1.2.4
 
-- Updated dependencies.
-- Added new property "fileIgnore" which use for set that will be non-processing files.
-- Changed dependency from [hasha] to [@noble/hashes] by that occured execution error in Node.js@24.0.0 and upper versions.
-- Devided files into Japanese and English languages from one README.md file.
+- Fixed process about options.classPrefix and options.classSuffix.
+- Changed options.retryCount to 60 (times; nearly equal as 60 secounds).
+- Changed a condition about retry re-generate class name.
+- Added and fixed about notes which mention TailwindCSS v3.
 
 ---
 
@@ -43,7 +43,7 @@ If you want to apply to PHP files, please refer to ([notice 2](#notice-2-replaci
 ## Indexes
 
 - [PostCSS UUID Obfuscator](#postcss-uuid-obfuscator)
-  - [Revision: in v1.2](#revision-in-v12)
+  - [Revision: in v1.2.4](#revision-in-v124)
   - [Indexes](#indexes)
   - [Where are differences](#where-are-differences)
     - [Generating algorism](#generating-algorism)
@@ -212,7 +212,7 @@ Define scripts property above in a package.json.
 ### Install npm package
 
 ```
-npm install autoprefixer dotenv fs-extra gulp gulp-connect-php gulp-if gulp-postcss gulp-rename gulp-sass postcss-csso postcss-uuid-obfuscator sass tailwindcss
+npm install autoprefixer dotenv fs-extra gulp gulp-connect-php gulp-if gulp-postcss gulp-rename gulp-sass postcss-csso postcss-uuid-obfuscator sass tailwindcss@3
 ```
 
 Install npm packages above.
@@ -464,7 +464,7 @@ Please set CSS task to order in the last.
 ### Install npm package
 
 ```
-npm install autoprefixer dotenv fs-extra glob npm-run-all2 path postcss postcss-csso postcss-uuid-obfuscator sass tailwindcss
+npm install autoprefixer dotenv fs-extra glob npm-run-all2 path postcss postcss-csso postcss-uuid-obfuscator sass tailwindcss@3
 ```
 
 Install npm packages above.
@@ -472,6 +472,8 @@ Install npm packages above.
 There are written in SCSS syntax.
 
 And using with [TailwindCSS], [autoprefixer] and [postcss-csso].
+
+> This sample is still in v3 what will not upgrade to v4 about TailwindCSS because that couldn't become to conform to be a plugins
 
 Please should finish initializing a `npx tailwindcss init`.
 
