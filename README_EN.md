@@ -5,12 +5,9 @@
 |[<img width="24" height="24" align="left" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵"> 日本語](README.md)|[<img width="24" height="24" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸"> English](README_EN.md)|
 <!-- <style>.x--hr{height:1.5em}</style> -->
 
-## Revision: in v1.2.4
+## Revision: in v1.2.5
 
-- Fixed process about options.classPrefix and options.classSuffix.
-- Changed options.retryCount to 60 (times; nearly equal as 60 secounds).
-- Changed a condition about retry re-generate class name.
-- Added and fixed about notes which mention TailwindCSS v3.
+- Change dependency from `gulp-connect-php` to `gulp-devserver-php` in `test/gulp`.
 
 ---
 
@@ -43,7 +40,7 @@ If you want to apply to PHP files, please refer to ([notice 2](#notice-2-replaci
 ## Indexes
 
 - [PostCSS UUID Obfuscator](#postcss-uuid-obfuscator)
-  - [Revision: in v1.2.4](#revision-in-v124)
+  - [Revision: in v1.2.5](#revision-in-v125)
   - [Indexes](#indexes)
   - [Where are differences](#where-are-differences)
     - [Generating algorism](#generating-algorism)

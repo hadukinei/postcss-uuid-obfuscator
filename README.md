@@ -5,12 +5,9 @@
 |[<img width="24" height="24" align="left" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵"> 日本語](README.md)|[<img width="24" height="24" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸"> English](README_EN.md)|
 <!-- <style>.x--hr{height:1.5em}</style> -->
 
-## 更新点: v1.2.4
+## 更新点: v1.2.5
 
-- options.classPrefixとoptions.classSuffixの処理を修正
-- リトライ回数を60回（約60秒）に変更
-- リトライの条件を修正
-- TailwindCSS v3に関する記述の更新と追加
+- `test/gulp`の依存パッケージを`gulp-connect-php`から`gulp-devserver-php`へと変更
 
 ---
 
@@ -43,7 +40,7 @@ PHPでの処理については[注釈2](#php処理について)を参照して�
 ## 目次
 
 - [PostCSS UUID Obfuscator](#postcss-uuid-obfuscator)
-  - [更新点: v1.2.4](#更新点-v124)
+  - [更新点: v1.2.5](#更新点-v125)
   - [目次](#目次)
   - [特徴](#特徴)
     - [生成アルゴリズム](#生成アルゴリズム)

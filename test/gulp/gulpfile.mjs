@@ -41,7 +41,7 @@ import ts from 'typescript'
 
 // Live server
 import browserSync from 'browser-sync'
-import connectPHP from 'gulp-connect-php';
+import { server } from 'gulp-devserver-php';
 
 
 /**
@@ -51,7 +51,6 @@ import connectPHP from 'gulp-connect-php';
 // dotenv
 const dotenvData = configDotenv({path: '.env'}).parsed ?? {};
 const isPHP = /true/.test(dotenvData.IS_PHP ?? 'false')
-const PHP_INI = dotenvData.PHP_INI ?? ''
 
 // npm run build, or npm run dev
 const isDev = /(^|[\s'"`])dev([\s'"`]|$)/.test(process.title)
@@ -253,16 +252,13 @@ const task_watch = done => {
 
 const task_server = done => {
   if(isPHP){
-    let options = {
-      base: 'dist',
-      port: 8880,
-    }
-    if(PHP_INI !== ''){
-      options.ini = PHP_INI
-    }
-
-    connectPHP.server(
-      options,
+    server(
+      {
+        base: 'dist',
+        port: 8880,
+        bin: "D:/php-8.4.10/php.exe",
+        ini: "D:/php-8.4.10/php.ini",
+      },
       () => {
         browserSync.init({
           proxy: 'localhost:8880'

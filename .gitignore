@@ -5,3 +5,6 @@ node_modules/
 /test/postcss/dist/
 /test/src/_adobe/
 /test/t/
+
+css-obfuscator/
+.obfuscator.lock
