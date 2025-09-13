@@ -152,9 +152,10 @@ export const obfuscator = (options = {}) => {
         if(processedFiles.size == 0){
           await preRun()
           process.stdout.write(`${chalk.bold.blue("Obfuscator prerun:")} ${chalk.cyan("Finished.")}\r\n`)
-          fs.writeFileSync(lockFilePath, '')
-          process.stdout.write(`${chalk.bold.blue("Obfuscator create:")} ${chalk.cyan(lockFilePath)}\r\n`)
         }
+
+        fs.writeFileSync(lockFilePath, '')
+        process.stdout.write(`${chalk.bold.blue("Obfuscator create:")} ${chalk.cyan(lockFilePath)}\r\n`)
 
         let cssFile = getRelativePath(result.opts.from)
         optionsOverride.cssNo ++
@@ -265,17 +266,17 @@ export const applyObfuscated = () => {
         optionsOverride.targetPath,
         {css: ['.css']},
         []
-      );
+      )
       const countEvery = getFileCount(
         optionsOverride.targetPath,
         optionsOverride.extensions,
         optionsOverride.outputExcludes
-      );
+      )
       const countEveryAll = getFileCount(
         optionsOverride.targetPath,
         optionsOverride.extensions,
         []
-      );
+      )
       return [countCssAll, countEvery, countEveryAll]
     })
     .then(arr => {
