@@ -27,7 +27,7 @@ import { minify } from 'terser'
 
 // Hash for Crypt
 import { v4 as uuid4 } from 'uuid'
-import { sha3_512 } from '@noble/hashes/sha3'
+import { sha3_512 } from '@noble/hashes/sha3.js'
 
 // CLI
 import chalk from 'chalk'
