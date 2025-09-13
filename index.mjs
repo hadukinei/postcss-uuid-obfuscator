@@ -297,13 +297,16 @@ export const applyObfuscated = () => {
     })
     .then(() => {
       optionsOverride.callBack()
+      optionsOverride.isComplete = true
+    })
+    .catch(e => {
+      process.stdout.write(`${chalk.bold.blue("Obfuscator error:")} ${chalk.red(e)}\r\n`)
     })
     .finally(() => {
       if(fs.existsSync(lockFilePath)){
         fs.rmSync(lockFilePath, {recursive: true})
         process.stdout.write(`${chalk.bold.blue("Obfuscator unlink:")} ${chalk.cyan(lockFilePath)}\r\n`)
       }
-      optionsOverride.isComplete = true
     })
   }
 
