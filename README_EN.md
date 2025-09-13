@@ -5,9 +5,10 @@
 |[<img width="24" height="24" align="left" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵"> 日本語](README.md)|[<img width="24" height="24" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸"> English](README_EN.md)|
 <!-- <style>.x--hr{height:1.5em}</style> -->
 
-## Revision: in v1.2.5
+## Revision: in v1.2.6
 
-- Change dependency from `gulp-connect-php` to `gulp-devserver-php` in `test/gulp`.
+- Add and Modify type definition (export declare) in `index.d.ts`.
+- Update dependencies to latest version.
 
 ---
 
@@ -40,7 +41,7 @@ If you want to apply to PHP files, please refer to ([notice 2](#notice-2-replaci
 ## Indexes
 
 - [PostCSS UUID Obfuscator](#postcss-uuid-obfuscator)
-  - [Revision: in v1.2.5](#revision-in-v125)
+  - [Revision: in v1.2.6](#revision-in-v126)
   - [Indexes](#indexes)
   - [Where are differences](#where-are-differences)
     - [Generating algorism](#generating-algorism)

@@ -5,9 +5,10 @@
 |[<img width="24" height="24" align="left" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵"> 日本語](README.md)|[<img width="24" height="24" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸"> English](README_EN.md)|
 <!-- <style>.x--hr{height:1.5em}</style> -->
 
-## 更新点: v1.2.5
+## 更新点: v1.2.6
 
-- `test/gulp`の依存パッケージを`gulp-connect-php`から`gulp-devserver-php`へと変更
+- `index.d.ts`に型定義（export declare）を追加, 更新
+- パッケージのバージョンを最新に更新
 
 ---
 
@@ -40,7 +41,7 @@ PHPでの処理については[注釈2](#php処理について)を参照して�
 ## 目次
 
 - [PostCSS UUID Obfuscator](#postcss-uuid-obfuscator)
-  - [更新点: v1.2.5](#更新点-v125)
+  - [更新点: v1.2.6](#更新点-v126)
   - [目次](#目次)
   - [特徴](#特徴)
     - [生成アルゴリズム](#生成アルゴリズム)
