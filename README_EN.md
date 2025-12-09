@@ -5,9 +5,10 @@
 |[<img width="24" height="24" align="left" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵"> 日本語](README.md)|[<img width="24" height="24" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸"> English](README_EN.md)|
 <!-- <style>.x--hr{height:1.5em}</style> -->
 
-## Revision: in v1.2.6
+## Revision: in v1.3.0
 
-- Add and Modify type definition (export declare) in `index.d.ts`.
+- Back to algorism similar to v1.2.8.
+- Added an opion `pathIgnore` that is using for exclusion procession by per-filepath basis.
 - Update dependencies to latest version.
 
 ---
@@ -41,7 +42,7 @@ If you want to apply to PHP files, please refer to ([notice 2](#notice-2-replaci
 ## Indexes
 
 - [PostCSS UUID Obfuscator](#postcss-uuid-obfuscator)
-  - [Revision: in v1.2.6](#revision-in-v126)
+  - [Revision: in v1.3.0](#revision-in-v130)
   - [Indexes](#indexes)
   - [Where are differences](#where-are-differences)
     - [Generating algorism](#generating-algorism)
@@ -73,6 +74,7 @@ If you want to apply to PHP files, please refer to ([notice 2](#notice-2-replaci
     - [options.classSuffix](#optionsclasssuffix)
     - [options.classIgnore](#optionsclassignore)
     - [options.fileIgnore](#optionsfileignore)
+    - [options.pathIgnore](#optionspathignore)
     - [options.jsonsPath](#optionsjsonspath)
     - [options.targetPath](#optionstargetpath)
     - [options.extensions](#optionsextensions)
@@ -668,6 +670,7 @@ const options = {
   classSuffix,
   classIgnore,
   fileIgnore,
+  pathIgnore,
   jsonsPath,
   targetPath,
   extensions,
@@ -760,6 +763,28 @@ This option uses to designate packages or plugins files which ought not to inclu
 If you want to designate files, then please set like `['plugins.min.js']`.
 
 Must be only a file name without file paths.
+
+<div class="x--hr"></div>
+
+
+### options.pathIgnore
+
+If there is a part of file path which matches string between `option.pathIgnore`, these files would not be executed to hash-nization work flow.
+
+Default value: [] (Array &lt;string&gt;)
+
+<div class="x--hr"></div>
+
+In the case of not executing hash-nization about all files belonging to specify folders -- you want to apply this option, might be good to code like below.
+
+```javascript
+import path from 'node:path'
+const sep = path.sep
+
+obfuscator({
+  pathIgnore: [`parentFolder${sep}targetFolder${sep}`],
+})
+```
 
 <div class="x--hr"></div>
 

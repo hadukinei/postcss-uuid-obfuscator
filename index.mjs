@@ -54,6 +54,7 @@ const defaultOptions = {
   classSuffix: '',
   classIgnore: [],
   fileIgnore: [],
+  pathIgnore: [],
   jsonsPath: 'css-obfuscator',
   targetPath: 'out',
   extensions: {
@@ -108,6 +109,7 @@ export const obfuscator = (options = {}) => {
     classSuffix,
     classIgnore,
     fileIgnore,
+    pathIgnore,
     jsonsPath,
     targetPath,
     extensions,
@@ -293,12 +295,11 @@ export const applyObfuscated = () => {
       })
     })
     .then(() => {
-      replaceJsonKeysInFiles(optionsOverride.targetPath, optionsOverride.extensions, optionsOverride.outputExcludes, optionsOverride.jsonsPath, optionsOverride.keepData, optionsOverride.applyClassNameWithoutDot, optionsOverride.fileIgnore)
+      replaceJsonKeysInFiles(optionsOverride.targetPath, optionsOverride.extensions, optionsOverride.outputExcludes, optionsOverride.jsonsPath, optionsOverride.keepData, optionsOverride.applyClassNameWithoutDot, optionsOverride.fileIgnore, optionsOverride.pathIgnore)
       process.stdout.write(`${chalk.bold.blue("Obfuscator done:")} ${chalk.cyan("All files have been updated.")}\r\n`)
     })
     .then(() => {
       optionsOverride.callBack()
-      optionsOverride.isComplete = true
     })
     .catch(e => {
       process.stdout.write(`${chalk.bold.blue("Obfuscator error:")} ${chalk.red(e)}\r\n`)
@@ -308,6 +309,7 @@ export const applyObfuscated = () => {
         fs.rmSync(lockFilePath, {recursive: true})
         process.stdout.write(`${chalk.bold.blue("Obfuscator unlink:")} ${chalk.cyan(lockFilePath)}\r\n`)
       }
+      optionsOverride.isComplete = true
     })
   }
 
@@ -409,7 +411,7 @@ const writeJsonToFile = (data, filePath, format = true, fresh = false, startOver
 }
 
 
-const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPath, keepData, applyClassNameWithoutDot, fileIgnore) => {
+const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPath, keepData, applyClassNameWithoutDot, fileIgnore, pathIgnore) => {
   const jsonData = {}
   fs.readdirSync(jsonDataPath).forEach(file => {
     const filePath = path.join(jsonDataPath, file)
@@ -421,6 +423,14 @@ const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPa
     const fileExt = path.extname(filePath).toLowerCase()
     const fileName = path.basename(filePath)
 
+    let isUnIgnorePath = true
+    for(let i = 0, l = pathIgnore.length; i < l; i ++) {
+      if(filePath.indexOf(pathIgnore[i]) === -1) {
+        isUnIgnorePath = false
+        break
+      }
+    }
+
     if(fs.statSync(filePath).isDirectory()){
       fs.readdirSync(filePath).forEach(subFilePath => {
         replaceJsonKeysInFile(path.join(filePath, subFilePath))
@@ -428,6 +438,8 @@ const replaceJsonKeysInFiles = (filesDir, extensions, outputExcludes, jsonDataPa
     }else if(outputExcludes.includes(fileExt)){
       process.stdout.write(`${chalk.bold.blue("Obfuscator ignore:")} ${chalk.cyan(filePath)}\r\n`)
     }else if(fileIgnore.includes(fileName)){
+      process.stdout.write(`${chalk.bold.blue("Obfuscator ignore:")} ${chalk.cyan(filePath)}\r\n`)
+    }else if(isUnIgnorePath){
       process.stdout.write(`${chalk.bold.blue("Obfuscator ignore:")} ${chalk.cyan(filePath)}\r\n`)
     }else if(!outputExcludes.includes(path.basename(filePath)) && extensions.html.includes(fileExt)){
       //replace html

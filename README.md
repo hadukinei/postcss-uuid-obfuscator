@@ -5,9 +5,10 @@
 |[<img width="24" height="24" align="left" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵"> 日本語](README.md)|[<img width="24" height="24" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸"> English](README_EN.md)|
 <!-- <style>.x--hr{height:1.5em}</style> -->
 
-## 更新点: v1.2.6
+## 更新点: v1.3.0
 
-- `index.d.ts`に型定義（export declare）を追加, 更新
+- アルゴリズムを1.2.8相当にフォールバック
+- ファイルパス単位での除外処理オプション（pathIgnore）を追加
 - パッケージのバージョンを最新に更新
 
 ---
@@ -41,7 +42,7 @@ PHPでの処理については[注釈2](#php処理について)を参照して�
 ## 目次
 
 - [PostCSS UUID Obfuscator](#postcss-uuid-obfuscator)
-  - [更新点: v1.2.6](#更新点-v126)
+  - [更新点: v1.3.0](#更新点-v130)
   - [目次](#目次)
   - [特徴](#特徴)
     - [生成アルゴリズム](#生成アルゴリズム)
@@ -73,6 +74,7 @@ PHPでの処理については[注釈2](#php処理について)を参照して�
     - [options.classSuffix](#optionsclasssuffix)
     - [options.classIgnore](#optionsclassignore)
     - [options.fileIgnore](#optionsfileignore)
+    - [options.pathIgnore](#optionspathignore)
     - [options.jsonsPath](#optionsjsonspath)
     - [options.targetPath](#optionstargetpath)
     - [options.extensions](#optionsextensions)
@@ -638,6 +640,7 @@ const options = {
   classSuffix,
   classIgnore,
   fileIgnore,
+  pathIgnore,
   jsonsPath,
   targetPath,
   extensions,
@@ -728,6 +731,31 @@ options.outputExcludesは拡張子単位での除外指定を行いますが、�
 保存したプラグインファイルなど、ハッシュ化処理に巻き込みたくない場合に使います。
 
 指定するには`['plugins.min.js']`のようにファイル名のみで記述して、フォルダ名を含めないようにしてください。
+
+<div class="x--hr"></div>
+
+
+### options.pathIgnore
+
+ハッシュ化処理に含めないファイルパスの一部。
+
+options.outputExcludesは拡張子単位で、options.fileIgnoreはファイル名単位で、それぞれ除外指定を行います。
+options.pathIgnoreは、ファイルパスの一部を指定することで、それを含むファイルを除外します。
+
+初期値: [] (Array &lt;string&gt;)
+
+<div class="x--hr"></div>
+
+特定のフォルダに属する全てのファイルをハッシュ化処理に巻き込ませない場合に、下記のようにして使います。
+
+```javascript
+import path from 'node:path'
+const sep = path.sep
+
+obfuscator({
+  pathIgnore: [`parentFolder${sep}targetFolder${sep}`],
+})
+```
 
 <div class="x--hr"></div>
 

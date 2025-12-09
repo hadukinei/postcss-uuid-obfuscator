@@ -66,6 +66,13 @@ interface PostCssUuidObfuscatorOption extends object {
   fileIgnore?: [],
 
   /**
+   * PostCSS UUID Obfuscator options: pathIgnore
+   * @param {string[]} pathIgnore - Designate ignoring file-pathes that would not be obfuscated.
+   * @default []
+   */
+  pathIgnore?: [],
+
+  /**
    * PostCSS UUID Obfuscator options: jsonsPath
    * @param {string} jsonsPath - Intermediate folder's name which saves JSON files about obfuscation list table.
    * @default 'css-obfuscator'
