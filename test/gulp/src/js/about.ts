@@ -17,17 +17,17 @@ import Scrollbar from 'smooth-scrollbar'
      * @param {string} className 変更後のクラス名
      */
     const theme = (className: string) => {
-      d.querySelector('html')!.classList.remove(...['is--light', 'is--dark'])
+      d.querySelector('html')!.classList.remove(...['is-light', 'is-dark'])
       d.querySelector('html')!.classList.add(className)
     };
 
     d.querySelector('.c-header--color_theme--button_light')?.addEventListener('click', e => {
       e.stopPropagation()
-      theme('is--light')
+      theme('is-light')
     })
     d.querySelector('.c-header--color_theme--button_dark')?.addEventListener('click', e => {
       e.stopPropagation()
-      theme('is--dark')
+      theme('is-dark')
     })
   })
 })(document)

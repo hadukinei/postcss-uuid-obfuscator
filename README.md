@@ -5,13 +5,15 @@
 |[<img width="24" height="24" align="left" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵"> 日本語](README.md)|[<img width="24" height="24" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸"> English](README_EN.md)|
 <!-- <style>.x--hr{height:1.5em}</style> -->
 
-## 更新点: v1.3.0
+## 更新点: v1.4.0
 
-- アルゴリズムを1.2.8相当にフォールバック
-- ファイルパス単位での除外処理オプション（pathIgnore）を追加
-- パッケージのバージョンを最新に更新
+- pathIgnoreの初期値に関するバグ修正
+- 依存パッケージの更新
+- サンプルプログラムの更新
+- index.d.tsの修正
 
----
+
+## 概要
 
 この[PostCSS]プラグインはクラス名を[UUID]などでハッシュ化します。
 
@@ -42,7 +44,8 @@ PHPでの処理については[注釈2](#php処理について)を参照して�
 ## 目次
 
 - [PostCSS UUID Obfuscator](#postcss-uuid-obfuscator)
-  - [更新点: v1.3.0](#更新点-v130)
+  - [更新点: v1.4.0](#更新点-v140)
+  - [概要](#概要)
   - [目次](#目次)
   - [特徴](#特徴)
     - [生成アルゴリズム](#生成アルゴリズム)
@@ -742,7 +745,7 @@ options.outputExcludesは拡張子単位での除外指定を行いますが、�
 options.outputExcludesは拡張子単位で、options.fileIgnoreはファイル名単位で、それぞれ除外指定を行います。
 options.pathIgnoreは、ファイルパスの一部を指定することで、それを含むファイルを除外します。
 
-初期値: [] (Array &lt;string&gt;)
+初期値: ['#'] (Array &lt;string&gt;)
 
 <div class="x--hr"></div>
 

@@ -6,7 +6,7 @@
  */
 export declare function cleanObfuscator(jsonsPath: string): null
 
-interface TargetExtensionsObject extends object {
+interface TargetExtensionsObject extends Object {
   html: string[],
   javascript: string[],
   php: string[],
@@ -15,7 +15,7 @@ interface TargetExtensionsObject extends object {
 /**
  * Define a variable option used by function `obfuscator`.
  */
-interface PostCssUuidObfuscatorOption extends object {
+interface PostCssUuidObfuscatorOption extends Object {
   /**
    * PostCSS UUID Obfuscator options: enable
    * @param {boolean} enable - Enable to work this plugin.
@@ -135,7 +135,7 @@ interface PostCssUuidObfuscatorOption extends object {
    * Pre-run function that fired when run before `obfuscator` function.
    * @returns Promise
    */
-  preRun?: () => Promise
+  preRun?: () => Promise<null>
 
   /**
    * Callback function that will emit in the ending of `applyObfuscated` function.

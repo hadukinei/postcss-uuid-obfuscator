@@ -3,7 +3,7 @@
  */
 
 // Stream
-import fs from 'fs-extra'
+import fs from 'node:fs'
 
 
 /**
@@ -25,4 +25,4 @@ if(fs.existsSync(jsonsPath)){
   fs.rmSync(jsonsPath, {recursive: true})
 }
 
-fs.ensureDirSync('dist')
+fs.mkdirSync('dist', {recursive: true})

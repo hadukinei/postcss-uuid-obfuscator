@@ -3,8 +3,9 @@
  */
 
 // Files
-import { glob } from 'glob'
-import fs from 'fs-extra'
+import fs from 'node:fs'
+import path from 'node:path'
+import globlike from './globlike.mjs'
 
 // TypeScript
 import ts from 'typescript'
@@ -24,12 +25,12 @@ const task = async () => {
     exclude: ['node_modules'],
   }
 
-  const files = await glob('src/js/**/!(_)*.{js,ts}', {
-    ignore: 'node_modules/**',
-  })
+  const files = globlike('src/js')
 
   files.forEach(file => {
-    fs.readFile(file)
+    if(path.extname(file) !== '.ts') return
+
+    fs.promises.readFile(file)
     .then(res => Buffer.from(res).toString("utf8").replace(/^import\s.*?$/gm, ''))
     .then(body => {
       const oUrl = file.replace(/^src\\js\\/, '.\\dist\\js\\').replace(/\.ts$/, '.js').replace(/\\/g, '/')
@@ -40,13 +41,9 @@ const task = async () => {
       }
     })
     .then(data => {
-      fs.ensureFile(data.oUrl, () => {
-        fs.writeFile(data.oUrl, data.jsText)
-        .catch(e => {
-          console.log(e)
-        })
-      })
-      return 0
+      const distPath = path.dirname(file).replace(/^src/, 'dist') + path.sep + path.basename(file).replace(/[.]ts$/, '.js')
+      fs.mkdirSync(path.dirname(distPath), {recursive: true})
+      fs.writeFileSync(data.oUrl, data.jsText)
     })
     .catch(e => {
       console.log(e)

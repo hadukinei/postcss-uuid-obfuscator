@@ -3,9 +3,9 @@
  */
 
 // Files
-import { glob } from 'glob'
-import fs from 'fs-extra'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
+import globlike from './globlike.mjs'
 
 // Image
 import sharp from 'sharp'
@@ -17,20 +17,18 @@ import sharp from 'sharp'
 
 // copy from src/public/ to dist/
 const task = async () => {
-  const files = await glob('src/img/**/*.*', {
-    ignore: 'node_modules/**',
-  })
+  const files = globlike('src/img')
 
   files.forEach(file => {
     const distPath = path.dirname(file).replace(/^src/, 'dist') + path.sep + path.basename(file)
+    fs.mkdirSync(path.dirname(distPath), {recursive: true})
+
     const ext = path.extname(file)
     let renamedPath = ''
 
     switch(ext){
       case '.png':
-        renamedPath = distPath.replace(/\..+?$/, '.webp')
-        fs.ensureFileSync(distPath)
-        fs.ensureFileSync(renamedPath)
+        renamedPath = distPath.replace(/[.].+?$/, '.webp')
 
         sharp(file)
         .png({
@@ -54,9 +52,7 @@ const task = async () => {
 
       case '.jpeg':
       case '.jpg':
-        renamedPath = distPath.replace(/\..+?$/, '.webp')
-        fs.ensureFileSync(distPath)
-        fs.ensureFileSync(renamedPath)
+        renamedPath = distPath.replace(/[.].+?$/, '.webp')
 
         sharp(file)
         .jpeg({
@@ -79,11 +75,9 @@ const task = async () => {
       break;
 
       default:
-      fs.copySync(file, distPath)
+        fs.copyFileSync(file, distPath, {recursive: true})
       break;
     }
-    //console.log(file, ext)
-    //fs.copySync(file, distPath)
   })
 }
 

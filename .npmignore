@@ -1,0 +1,10 @@
+node_modules/
+
+/test/css-obfuscator/
+/test/gulp/dist/
+/test/postcss/dist/
+/test/src/_adobe/
+/test/t/
+
+css-obfuscator/
+.obfuscator.lock

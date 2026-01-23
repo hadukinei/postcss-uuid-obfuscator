@@ -3,9 +3,9 @@
  */
 
 // Files
-import { glob } from 'glob'
-import fs from 'fs-extra'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
+import globlike from './globlike.mjs'
 
 
 /**
@@ -13,16 +13,15 @@ import path from 'path'
  */
 
 // copy from src/public/ to dist/
-const task = async () => {
-  const files = await glob('src/public/**/*', {
-    ignore: 'node_modules/**',
-    dot: true,
-  })
+const task = () => {
+  const files = globlike('src/public')
 
   files.forEach(file => {
-    const distPath = 'dist' + path.dirname(file).replace(/^src[\/\\]+public/, '') + path.sep + path.basename(file).replace(/\.pug$/, '.html')
-    fs.copySync(file, distPath)
+    const distPath = 'dist' + path.dirname(file).replace(/^src[\/\\]+public/, '') + path.sep + path.basename(file)
+    fs.mkdirSync(path.dirname(distPath), {recursive: true})
+    fs.copyFileSync(file, distPath)
   })
 }
 
 task()
+

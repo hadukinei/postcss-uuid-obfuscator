@@ -9,9 +9,8 @@ import filter from 'gulp-filter'
 import gulpIf from 'gulp-if'
 import rename from 'gulp-rename'
 
-import { glob } from 'glob'
-
-import fs from 'fs-extra'
+import fs from 'node:fs'
+import through2 from 'through2'
 
 // Config
 import { configDotenv } from 'dotenv'
@@ -30,11 +29,11 @@ const sass = gulpSass(dartSass)
 // PostCSS
 import postcss from 'gulp-postcss'
 import autoprefixer from 'autoprefixer'
-import tailwindcss from 'tailwindcss'
 import csso from 'postcss-csso'
+import { enumSpreader } from 'postcss-enumerates-in-line'
 
-import { cleanObfuscator, obfuscator, applyObfuscated } from 'postcss-uuid-obfuscator'
-//import { cleanObfuscator, obfuscator, applyObfuscated } from '../../index.mjs'
+//import { cleanObfuscator, obfuscator, applyObfuscated } from 'postcss-uuid-obfuscator'
+import { cleanObfuscator, obfuscator, applyObfuscated } from '../../index.mjs'
 
 // TypeScript
 import ts from 'typescript'
@@ -51,6 +50,8 @@ import { server } from 'gulp-devserver-php';
 // dotenv
 const dotenvData = configDotenv({path: '.env'}).parsed ?? {};
 const isPHP = /true/.test(dotenvData.IS_PHP ?? 'false')
+const PHP_BIN = dotenvData.PHP_BIN ?? ''
+const PHP_INI = dotenvData.PHP_INI ?? ''
 
 // npm run build, or npm run dev
 const isDev = /(^|[\s'"`])dev([\s'"`]|$)/.test(process.title)
@@ -141,56 +142,32 @@ const task_html = done => {
 
 
 // Javascript <= TypeScript
-const task_js = async done => {
-  let promises = []
-  let files = await glob('./src/js/**/*.ts', {ignore: 'node_modules/**'})
+const task_js = done => {
+	const tsOption = {
+		target: 'es6',
+		module: 'commonjs',
+		explainFiles: true,
+		noImplicitAny: false,
+		exclude: ['node_modules'],
+	}
 
-  if(!files){
-    done();
-  }else{
-    const tsOption = {
-      target: 'es6',
-      module: 'commonjs',
-      explainFiles: true,
-      noImplicitAny: false,
-      exclude: ['node_modules'],
-    }
+	src('src/js/**/*.ts', {
+		allowEmpty: true,
+	})
+	.pipe(plumber())
+	.pipe(through2.obj((file, _, cb) => {
+		let text = file.contents.toString()
+		text = text.replace(/^import\s.*?$/gm, '')
+		text = ts.transpile(text, tsOption)
+		file.contents = Buffer.from(text)
+		cb(null, file)
+	}))
+	.pipe(rename({
+		extname: '.js',
+	}))
+	.pipe(dest('dist/js'))
 
-    files.forEach(file => {
-      promises.push(new Promise(resolve => {
-        fs.readFile(file)
-        .then(res => Buffer.from(res).toString("utf8").replace(/^import\s.*?$/gm, ''))
-        .then(body => {
-          const oUrl = file.replace(/^src\\js\\/, '.\\dist\\js\\').replace(/\.ts$/, '.js').replace(/\\/g, '/')
-          const jsText = ts.transpile(body, tsOption)
-          return {
-            oUrl: oUrl,
-            jsText: jsText,
-          }
-        })
-        .then(data => {
-          fs.ensureFile(data.oUrl, () => {
-            fs.writeFile(data.oUrl, data.jsText)
-            .then(() => {
-              resolve()
-            })
-            .catch(e => {
-              console.log(e)
-            })
-          })
-          return 0
-        })
-        .catch(e => {
-          console.log(e)
-        })
-      }))
-    })
-
-    Promise.allSettled(promises)
-    .finally(() => {
-      done()
-    })
-  }
+	done()
 }
 
 
@@ -204,7 +181,31 @@ const task_css = done => {
   .pipe(plumber())
   .pipe(sass())
   .pipe(postcss([
-    tailwindcss(),
+    enumSpreader({
+      darkClassName: 'is-dark',
+      appendShorthand: [
+        ['d', ['display']],
+
+        ['flw', ['flex-wrap']],
+        ['fld', ['flex-direction']],
+        ['jstc', ['justify-content']],
+        ['alni', ['align-items']],
+
+        ['pos', ['position']],
+        ['z', ['z-index']],
+
+        ['xion', ['transition']],
+
+        ['ojf', ['object-fit']],
+        //['ojp', ['object-position']],
+
+        ['bdf', ['backdrop-filter']],
+
+        ['fi', ['text-indent']],
+        ['fa', ['text-align']],
+        ['fsp', ['letter-spacing']],
+      ],
+    }),
     autoprefixer(),
     csso(),
     obfuscator({
@@ -213,7 +214,8 @@ const task_css = done => {
       targetPath: 'dist',
       jsonsPath: jsonsPath,
       applyClassNameWithoutDot: true,
-      classIgnore: ['scrollbar-track', 'scrollbar-thumb'],
+      pathIgnore: ['dist\\js\\smooth-scrollbar'],
+      classIgnore: ['is-light', 'is-dark', 'scrollbar-track', 'scrollbar-thumb'],
     })
   ]))
   .pipe(dest('dist'))
@@ -256,8 +258,8 @@ const task_server = done => {
       {
         base: 'dist',
         port: 8880,
-        bin: "D:/php-8.4.10/php.exe",
-        ini: "D:/php-8.4.10/php.ini",
+        bin: PHP_BIN ? PHP_BIN : 'php',
+        ini: PHP_INI ? PHP_INI : false,
       },
       () => {
         browserSync.init({

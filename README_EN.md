@@ -5,13 +5,15 @@
 |[<img width="24" height="24" align="left" src="README.img/1f1ef-1f1f5.png" alt="🇯🇵"> 日本語](README.md)|[<img width="24" height="24" align="left" src="README.img/1f1fa-1f1f8.png" alt="🇺🇸"> English](README_EN.md)|
 <!-- <style>.x--hr{height:1.5em}</style> -->
 
-## Revision: in v1.3.0
+## Revision: in v1.4.0
 
-- Back to algorism similar to v1.2.8.
-- Added an opion `pathIgnore` that is using for exclusion procession by per-filepath basis.
-- Update dependencies to latest version.
+- Fixed default value of pathIgnore
+- Update dependencies.
+- Update sample programs.
+- Fixed index.d.ts
 
----
+
+## Overview
 
 This is a [PostCSS] plugin which works to hash-nization (randomizing) class-name with [UUID].
 
@@ -42,7 +44,8 @@ If you want to apply to PHP files, please refer to ([notice 2](#notice-2-replaci
 ## Indexes
 
 - [PostCSS UUID Obfuscator](#postcss-uuid-obfuscator)
-  - [Revision: in v1.3.0](#revision-in-v130)
+  - [Revision: in v1.4.0](#revision-in-v140)
+  - [Overview](#overview)
   - [Indexes](#indexes)
   - [Where are differences](#where-are-differences)
     - [Generating algorism](#generating-algorism)
@@ -771,7 +774,7 @@ Must be only a file name without file paths.
 
 If there is a part of file path which matches string between `option.pathIgnore`, these files would not be executed to hash-nization work flow.
 
-Default value: [] (Array &lt;string&gt;)
+Default value: ['#'] (Array &lt;string&gt;)
 
 <div class="x--hr"></div>
 

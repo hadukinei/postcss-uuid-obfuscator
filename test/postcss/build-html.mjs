@@ -3,9 +3,9 @@
  */
 
 // Files
-import { glob } from 'glob'
-import fs from 'fs-extra'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
+import globlike from './globlike.mjs'
 
 // Pug
 import pug from 'pug'
@@ -24,7 +24,7 @@ const isPHP = /true/.test(dotenvData.IS_PHP ?? 'false')
 
 // Pug option
 const pugOption = {
-  // #{locals.base} in pug file
+  // #{locals.isPHP} in pug file
   isPHP: isPHP,
 
   // filter for PHP syntax
@@ -40,11 +40,11 @@ const pugOption = {
 
 // HTML <= Pug
 const task = async () => {
-  const files = await glob('src/**/!(_)*.pug', {
-    ignore: 'node_modules/**',
-  })
+  const files = globlike('src')
 
   files.forEach(file => {
+    if(path.extname(file) !== '.pug') return
+
     let body = fs.readFileSync(file, {
       encoding: 'utf-8',
     })
@@ -55,6 +55,7 @@ const task = async () => {
     + path.sep
     + path.basename(file).replace(/\.pug$/, (isPHP ? '.php' : '.html'))
 
+    fs.mkdirSync(path.dirname(distPath), {recursive: true})
     fs.writeFileSync(distPath, body)
   })
 }

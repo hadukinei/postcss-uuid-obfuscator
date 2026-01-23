@@ -6,7 +6,7 @@
 
 // Files
 import path from 'path'
-import fs from 'fs-extra'
+import fs from 'node:fs'
 
 // Syntax - CSS
 import { createParser } from 'css-selector-parser'
@@ -54,7 +54,7 @@ const defaultOptions = {
   classSuffix: '',
   classIgnore: [],
   fileIgnore: [],
-  pathIgnore: [],
+  pathIgnore: ['#'],
   jsonsPath: 'css-obfuscator',
   targetPath: 'out',
   extensions: {
@@ -139,11 +139,6 @@ export const obfuscator = (options = {}) => {
   return {
     postcssPlugin: pluginName,
     Once: async (root, { result }) => {
-      if(fs.existsSync(lockFilePath)){
-        fs.rmSync(lockFilePath, {recursive: true})
-        process.stdout.write(`${chalk.bold.blue("Obfuscator unlink:")} ${chalk.cyan(lockFilePath)}\r\n`)
-      }
-
       if(!enable){
         process.stdout.write(`${chalk.bold.blue("Obfuscator skip:")} ${chalk.cyan("Skip obfuscation (option.enable is false)")}\r\n`)
         return
